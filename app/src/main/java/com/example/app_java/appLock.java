@@ -9,22 +9,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class appLock extends AppCompatActivity {
 
     private String oldPwd = "";
-    private String Change_str;
+    String[] pwd = new String[4];
     private boolean changePwdUnlock = false;
 
     SharedPreferences sharePref;
     SharedPreferences.Editor editor;
-    EditText Et1;
-    EditText Et2;
-    EditText Et3;
-    EditText Et4;
+    ImageView IV1;
+    ImageView IV2;
+    ImageView IV3;
+    ImageView IV4;
     TextView Info;
     int currentValue = -1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,10 @@ public class appLock extends AppCompatActivity {
         sharePref = this.getSharedPreferences("appLock", Context.MODE_PRIVATE);
         editor = sharePref.edit();
 
-        Et1 = (EditText)findViewById(R.id.etPasscode1);
-        Et2 = (EditText)findViewById(R.id.etPasscode2);
-        Et3 = (EditText)findViewById(R.id.etPasscode3);
-        Et4 = (EditText)findViewById(R.id.etPasscode4);
+        IV1 = (ImageView)findViewById(R.id.ImageView1);
+        IV2 = (ImageView)findViewById(R.id.ImageView2);
+        IV3 = (ImageView)findViewById(R.id.ImageView3);
+        IV4 = (ImageView)findViewById(R.id.ImageView4);
         Info = (TextView)findViewById(R.id.etInputInfo);
     }
 
@@ -83,79 +85,76 @@ public class appLock extends AppCompatActivity {
         }
 
         String strCurrentValue = String.valueOf(currentValue);
+        IV1.requestFocus();
 
         if(currentValue != -1) {
-            if(Et1.isFocused()) {
+            if(pwd[0] == null && pwd[1] == null && pwd[2] == null && pwd[3] == null ) {
                 //setEditText(Et1, Et2, strCurrentValue);
-                Et1.setText(strCurrentValue);
-                Et2.requestFocus();
-                Et2.setText("");
+                pwd[0] = strCurrentValue;
+                IV1.setImageResource(R.drawable.safe_open);
+                IV2.requestFocus();
+                pwd[1] = null;
             }
-            else if(Et2.isFocused()) {
+            else if(!(pwd[0] == null) && pwd[1] == null && pwd[2] == null && pwd[3] == null) {
                 //setEditText(Et2, Et3, strCurrentValue);
-                Et2.setText(strCurrentValue);
-                Et3.requestFocus();
-                Et3.setText("");
+                pwd[1] = strCurrentValue;
+                IV2.setImageResource(R.drawable.safe_open);
+                IV3.requestFocus();
+                pwd[2] = null;
             }
-            else if(Et3.isFocused()) {
+            else if(!(pwd[0] == null) && !(pwd[1] == null) && pwd[2] == null && pwd[3] == null) {
                 //(Et3, Et4, strCurrentValue);
-                Et3.setText(strCurrentValue);
-                Et4.requestFocus();
-                Et4.setText("");
+                pwd[2] = strCurrentValue;
+                IV3.setImageResource(R.drawable.safe_open);
+                IV4.requestFocus();
+                pwd[3] = null;
             }
-            else if(Et4.isFocused()) {
-                Et4.setText(strCurrentValue);
+            else if(!(pwd[0] == null) && !(pwd[1] == null) && !(pwd[2] == null) && pwd[3] == null) {
+                IV4.setImageResource(R.drawable.safe_open);
+                pwd[3] = strCurrentValue;
             }
         }
 
-        if(Et4.getText().toString().length() != 0 && Et3.getText().toString().length() != 0 && Et2.getText().toString().length() != 0 && Et1.getText().toString().length() != 0 ){
-            int type = this.getIntent().getIntExtra("type",0);
+        if(!(pwd[0] == null) && !(pwd[1] == null) && !(pwd[2] == null) && !(pwd[3] == null) ){
+            int type = app_lock_const.ENABLE_PASSLOCK;
             inputType(type);
         }
 
     }
     private void onDeleteKey(){
         currentValue = -1;
-        if(Et1.isFocused()){
-            Et1.setText("");
+        if(IV1.isFocused()){
+            pwd[0] = null;
         }
-        else if(Et2.isFocused()){
-            Et1.setText("");
-            Et1.requestFocus();
+        else if(IV2.isFocused()){
+            pwd[0] = null;
+            IV1.requestFocus();
         }
-        else if(Et3.isFocused()){
-            Et2.setText("");
-            Et2.requestFocus();
+        else if(IV3.isFocused()){
+            pwd[1] = null;
+            IV2.requestFocus();
         }
-        else if(Et4.isFocused()){
-            Et3.setText("");
-            Et3.requestFocus();
+        else if(IV4.isFocused()){
+            pwd[2] = null;
+            IV3.requestFocus();
         }
     }
 
     private void onClear() {
-        Et1.setText("");
-        Et2.setText("");
-        Et3.setText("");
-        Et4.setText("");
-        Et1.requestFocus();
+        pwd[0] = null;
+        pwd[1] = null;
+        pwd[2] = null;
+        pwd[3] = null;
+        IV1.setImageResource(R.drawable.safe_close);
+        IV2.setImageResource(R.drawable.safe_close);
+        IV3.setImageResource(R.drawable.safe_close);
+        IV4.setImageResource(R.drawable.safe_close);
+        IV1.requestFocus();
     }
 
     public String inputPassword(){
-        String str1 = Et1.getText().toString();
-        String str2 = Et2.getText().toString();
-        String str3 = Et3.getText().toString();
-        String str4 = Et4.getText().toString();
-
-        String result =str1+str2+str3+str4;
-        return result;
+        return pwd[0] + pwd[1] + pwd[2] + pwd[3];
     }
-/*
-    private void setEditText(EditText currentEditText,EditText nextEditText,String strCurrentValue){
-        currentEditText.setText(strCurrentValue);
-        nextEditText.requestFocus();
-        nextEditText.setText("");
-    }*/
 
     private  void inputType(int type) {
 
@@ -177,7 +176,7 @@ public class appLock extends AppCompatActivity {
                 }
             }
         }
-
+/*
         else if (type == app_lock_const.DISABLE_PASSLOCK) {
             if (isPassLockSet()) {
                 if (checkPassLock(inputPassword())) {
@@ -193,7 +192,7 @@ public class appLock extends AppCompatActivity {
                 finish();
             }
         }
-
+*/////////금고 비활성화
         else if (type == app_lock_const.UNLOCK_PASSWORD) {
             if (checkPassLock(inputPassword())) {
                 setResult(Activity.RESULT_OK);
@@ -221,7 +220,8 @@ public class appLock extends AppCompatActivity {
                 if(oldPwd.equals(inputPassword())){
                     setPassLock(inputPassword());
                     setResult(Activity.RESULT_OK);
-                    finish();
+                    Intent Control = new Intent(appLock.this, Control.class);
+                    startActivity(Control);
                 }else{
                     changePwdUnlock = false;
                     oldPwd = inputPassword();
