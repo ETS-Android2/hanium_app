@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/safe_control"
+    android:background="@drawable/new_safe"
     tools:context=".Control">
 
     <Button
         android:id="@+id/btnset"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="@drawable/setting"
         ></Button>
 
 

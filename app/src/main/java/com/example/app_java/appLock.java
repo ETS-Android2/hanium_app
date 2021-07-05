@@ -15,6 +15,7 @@ import android.widget.TextView;
 public class appLock extends AppCompatActivity {
 
     private String oldPwd = "";
+    private String newpwd = "";
     String[] pwd = new String[4];
     private boolean changePwdUnlock = false;
 
@@ -116,7 +117,7 @@ public class appLock extends AppCompatActivity {
         }
 
         if(!(pwd[0] == null) && !(pwd[1] == null) && !(pwd[2] == null) && !(pwd[3] == null) ){
-            int type = app_lock_const.ENABLE_PASSLOCK;
+            int type = this.getIntent().getIntExtra("type",0);
             inputType(type);
         }
 
@@ -207,17 +208,18 @@ public class appLock extends AppCompatActivity {
         else if (type == app_lock_const.CHANGE_PASSLOCK) {
             if (checkPassLock(inputPassword()) && !changePwdUnlock) {
                 changePwdUnlock = true;
-                oldPwd = inputPassword();
+                newpwd = inputPassword();
                 onClear();
                 Info.setText("새로운 비밀번호 입력");
             }
-            else if(checkPassLock(oldPwd)){
-                oldPwd = inputPassword();
+            else if(checkPassLock(newpwd)){
+                changePwdUnlock = true;
+                newpwd = inputPassword();
                 onClear();
                 Info.setText("다시 한번 입력");
             }
             else{
-                if(oldPwd.equals(inputPassword())){
+                if(newpwd.equals(inputPassword())){
                     setPassLock(inputPassword());
                     setResult(Activity.RESULT_OK);
                     Intent Control = new Intent(appLock.this, Control.class);
@@ -231,7 +233,7 @@ public class appLock extends AppCompatActivity {
             }
         }
                 else{
-                Info.setText("비밀번호가 틀립니다");
+                Info.setText("비밀번호가 틀립니다" + type);
                 changePwdUnlock = false;
                 onClear();
             }

@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Intent intent = new Intent(MainActivity.this, appLock.class);
-                startActivity(intent);
+                intent.putExtra(app_lock_const.type,app_lock_const.ENABLE_PASSLOCK);
+                startActivityForResult(intent,app_lock_const.ENABLE_PASSLOCK);
             }
         });
     }
