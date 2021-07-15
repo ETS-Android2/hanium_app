@@ -88,6 +88,7 @@ public class appLock extends AppCompatActivity {
         String strCurrentValue = String.valueOf(currentValue);
         IV1.requestFocus();
 
+
         if(currentValue != -1) {
             if(pwd[0] == null && pwd[1] == null && pwd[2] == null && pwd[3] == null ) {
                 //setEditText(Et1, Et2, strCurrentValue);
