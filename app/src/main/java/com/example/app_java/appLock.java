@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.app_java.R;
+import com.example.app_java.app_lock_const;
+
 public class appLock extends AppCompatActivity {
 
     private String oldPwd = "";

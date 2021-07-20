@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/new_safe"
     android:orientation="vertical"
+    android:id="@+id/menu"
     tools:context=".Control">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        ></LinearLayout>
-    <Button
-        android:id="@+id/btnset"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/setting"
-        ></Button>
-    <EditText
-        android:id = "@+id/ET_User"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        ></EditText>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        ></LinearLayout>
-    <ImageView
-        android:id="@+id/mqtt_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ></ImageView>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_open"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/setting"
+            android:onClick="btnOnclick" />
+
+        <EditText
+            android:id = "@+id/ET_User"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ></EditText>
+
+        <ImageView
+            android:id="@+id/mqtt_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ImageView>
+        </LinearLayout>
+    <include layout="@layout/menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
