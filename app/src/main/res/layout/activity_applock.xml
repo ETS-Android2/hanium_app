@@ -101,7 +101,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="1"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -113,7 +113,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="2"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -125,7 +125,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="3"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -140,7 +140,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="4"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -152,7 +152,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="5"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -164,7 +164,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="6"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -179,7 +179,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="7"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -191,7 +191,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="8"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -203,7 +203,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="9"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -216,13 +216,14 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
+                    android:background="@color/white"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:onClick="onClick"
+                    android:src="@drawable/clear"
                     android:text="CLEAR"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btn0"
@@ -231,7 +232,7 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:text="0"
                     android:textSize="18dp"
                     android:onClick="onClick"/>
@@ -241,8 +242,9 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:textColor="@color/black"
-                    android:background="#00000000"
+                    android:background="@color/white"
                     android:layout_margin="5dp"
+                    android:src = "@drawable/delete"
                     android:text="DEL"
                     android:onClick="onClick"/>
             </TableRow>

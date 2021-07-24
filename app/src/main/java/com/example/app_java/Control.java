@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,20 +37,21 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.ByteArrayOutputStream;
 
 
 public class Control extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private View drawerView;
-    private MqttAndroidClient mqttAndroidClient = null;
+    private MqttAndroidClient mqttAndroidClient;
     private IMqttToken token;
     private EditText ET_User;
     private ImageView mqtt_image;
 
-
     NotificationManager manager;
     NotificationCompat.Builder builder;
+
 
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
@@ -57,9 +59,12 @@ public class Control extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mqttAndroidClient = null;
         setContentView(R.layout.activity_control);
         Button btnopen = (Button) findViewById(R.id.btn_open);
         TextView pwapp = (TextView) findViewById(R.id.pw_app);
+        TextView set_user = (TextView) findViewById(R.id.set_user);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.menu);
         drawerView = (View) findViewById(R.id.drawerView);
@@ -95,6 +100,7 @@ public class Control extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+
 /*
         try {
             mqttAndroidClient.subscribe("common", 0, new IMqttMessageListener() {
@@ -211,6 +217,15 @@ public class Control extends AppCompatActivity {
             }
         });
 
+        set_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent set_user_intent = new Intent(Control.this, User_seting.class);
+                startActivity(set_user_intent);
+                }
+            });
+
+
 
            pwapp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,6 +236,7 @@ public class Control extends AppCompatActivity {
             }
         });
     }
+
 
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
@@ -296,6 +312,14 @@ public class Control extends AppCompatActivity {
         manager.notify(1,notification);
 
     }
+
+    public byte[] bitmapToByteArray( Bitmap bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray ;
+    }
+
 
 }
 

@@ -6,8 +6,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,12 +19,15 @@ import android.widget.TextView;
 import com.example.app_java.R;
 import com.example.app_java.app_lock_const;
 
+import java.util.Random;
+
 public class appLock extends AppCompatActivity {
 
     private String oldPwd = "";
     private String newpwd = "";
-    String[] pwd = new String[4];
+    private String[] pwd = new String[4];
     private boolean changePwdUnlock = false;
+    private Animation anim;
 
     SharedPreferences sharePref;
     SharedPreferences.Editor editor;
@@ -30,6 +37,11 @@ public class appLock extends AppCompatActivity {
     ImageView IV4;
     TextView Info;
     int currentValue = -1;
+    private Button[] btn_array = null;
+    private int btnum;
+    private boolean start;
+    private int randnum1 ,randnum2;
+    private Random rand = new Random();
 
 
     @Override
@@ -45,8 +57,33 @@ public class appLock extends AppCompatActivity {
         IV3 = (ImageView)findViewById(R.id.ImageView3);
         IV4 = (ImageView)findViewById(R.id.ImageView4);
         Info = (TextView)findViewById(R.id.etInputInfo);
+        btn_array = new Button[12];
+        randnum1 = 0;
+        randnum2 = 0;
+        btnum = 0;
+        int[] btn_id = {
+                R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,
+                R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9,R.id.btnClear,R.id.btnErase
+        };
+        for( btnum = 0 ; btnum < 12 ; btnum++){
+            this.btn_array[btnum] = findViewById(btn_id[btnum]);
+        }
+
+        anim = new AlphaAnimation(0.0f,1.0f);
+        anim.setDuration(1000);
+        anim.setStartOffset(20);
+
+
     }
 
+    public void Rand_ani(){
+        randnum1 = rand.nextInt(12);
+        randnum2 = rand.nextInt(12);
+
+        btn_array[randnum1].startAnimation(anim);
+        btn_array[randnum2].startAnimation(anim);
+
+    }
 
     public void onClick(View view) {
 
@@ -54,38 +91,51 @@ public class appLock extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn0:
                 currentValue = 0;
+                Rand_ani();
+
                 break;
             case R.id.btn1:
                 currentValue = 1;
+                Rand_ani();
                 break;
             case R.id.btn2:
                 currentValue = 2;
+                Rand_ani();
                 break;
             case R.id.btn3:
                 currentValue = 3;
+                Rand_ani();
                 break;
             case R.id.btn4:
                 currentValue = 4;
+                Rand_ani();
                 break;
             case R.id.btn5:
                 currentValue = 5;
+                Rand_ani();
                 break;
             case R.id.btn6:
                 currentValue = 6;
+                Rand_ani();
                 break;
             case R.id.btn7:
                 currentValue = 7;
+                Rand_ani();
                 break;
             case R.id.btn8:
                 currentValue = 8;
+                Rand_ani();
                 break;
             case R.id.btn9:
                 currentValue = 9;
+                Rand_ani();
                 break;
             case R.id.btnClear:
                 onClear();
+                Rand_ani();
             case R.id.btnErase:
                 onDeleteKey();
+                Rand_ani();
         }
 
         String strCurrentValue = String.valueOf(currentValue);
