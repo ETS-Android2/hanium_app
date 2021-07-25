@@ -11,71 +11,36 @@
         android:layout_height="64dp"
         android:gravity="center"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
         android:text="Smart Safe"
         android:textSize="20sp"
         android:textColor="@color/black"
         />
 
     <LinearLayout
-        android:id="@+id/II_passcodes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
-        <ImageView
-            android:id="@+id/ImageView1"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:maxLength="1"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:src = "@drawable/safe_close"
-            android:textSize="40sp">
+        <ImageButton
+            android:id="@+id/visible_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/visible_btn"
+            ></ImageButton>
 
-            <requestFocus/>
-        </ImageView>
+        <EditText
+            android:id="@+id/text_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            ></EditText>
 
-        <ImageView
-            android:id="@+id/ImageView2"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:maxLength="1"
-            android:singleLine="true"
-            android:src = "@drawable/safe_close"
-            ></ImageView>
-
-        <ImageView
-            android:id="@+id/ImageView3"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:maxLength="1"
-            android:singleLine="true"
-            android:src = "@drawable/safe_close"
-            ></ImageView>
-
-        <ImageView
-            android:id="@+id/ImageView4"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:maxLength="1"
-            android:singleLine="true"
-            android:src = "@drawable/safe_close"
-            ></ImageView>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -83,6 +48,16 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="48dp"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/set_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@color/white"
+            android:text="OK"
+            android:textColor="@color/black"></Button>
 
         <TableLayout
             android:id="@+id/tl_keys"
@@ -99,36 +74,36 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="1"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn2"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="2"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn3"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="3"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
             </TableRow>
 
             <TableRow>
@@ -138,36 +113,36 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="4"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn5"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="5"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn6"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="6"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
             </TableRow>
 
             <TableRow>
@@ -177,36 +152,36 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="7"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn8"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="8"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn9"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="9"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
             </TableRow>
 
             <TableRow>
@@ -221,7 +196,6 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:onClick="onClick"
-                    android:src="@drawable/clear"
                     android:text="CLEAR"
                     android:textColor="@color/black" />
 
@@ -230,24 +204,26 @@
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:textColor="@color/black"
                     android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="onClick"
                     android:text="0"
-                    android:textSize="18dp"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btnErase"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:textColor="@color/black"
-                    android:background="@color/white"
                     android:layout_margin="5dp"
-                    android:src = "@drawable/delete"
+                    android:background="@color/white"
+                    android:onClick="onClick"
                     android:text="DEL"
-                    android:onClick="onClick"/>
+                    android:textColor="@color/black" />
             </TableRow>
         </TableLayout>
+
     </LinearLayout>
+
+
 </LinearLayout>
