@@ -1,44 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/l"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_safe"
-    android:orientation="vertical"
-    android:id="@+id/menu"
+    android:background="@drawable/closed"
     tools:context=".Control">
 
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout2"
+        android:layout_width="414dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="#65A4CAC3"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp">
 
-        <Button
-            android:id="@+id/btn_open"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/setting"
-            android:onClick="onClick"
-            ></Button>
 
-        <EditText
-            android:id ="@+id/ET_User"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ></EditText>
+<!--        <ImageButton-->
+<!--            android:id="@+id/homeButton"-->
+<!--            android:layout_width="67dp"-->
+<!--            android:layout_height="65dp"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/home"-->
+<!--            tools:layout_editor_absoluteX="1dp"-->
+<!--            tools:layout_editor_absoluteY="5dp"-->
+<!--            />-->
 
-        <ImageView
-            android:id="@+id/mqtt_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ></ImageView>
+        <ImageButton
+            android:id="@+id/Cam_Button"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/cam"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="5dp"
+            tools:ignore="MissingConstraints" />
 
+        <ImageButton
+            android:id="@+id/set_lock_way"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:scaleType="center"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="5dp"></ImageButton>
 
 
     </LinearLayout>
 
-    <include layout="@layout/menu"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="#EFEFEF"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-</androidx.drawerlayout.widget.DrawerLayout>
+        <ImageButton
+            android:id="@+id/pw_menu"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/lockButton"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/lock"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/lock"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+
+        <ImageButton
+            android:id="@+id/userBotton"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/user"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/user"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

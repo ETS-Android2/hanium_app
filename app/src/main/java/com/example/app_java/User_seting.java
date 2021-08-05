@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -48,14 +49,18 @@ public class User_seting extends AppCompatActivity {
     private MqttAndroidClient mqttAndroidClient;
     private IMqttToken token;
     private Button set_user_btn;
+    private Button btn_picture;
+    private ImageButton btn_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_seting);
         token = null;
-        set_user_btn = findViewById(R.id.set_user_btn);
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        set_user_btn = findViewById(R.id.set_user);
+        btn_picture = findViewById(R.id.picture);
+        btn_home = (ImageButton)findViewById(R.id.homeButton);
+        btn_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int permissionCheck = ContextCompat.checkSelfPermission(User_seting.this, Manifest.permission.CAMERA);
@@ -95,6 +100,14 @@ public class User_seting extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_home = new Intent(User_seting.this, Control.class );
+                startActivity(intent_home);
+            }
+        });
+
 
         set_user_btn.setOnClickListener(new View.OnClickListener() {
             @Override

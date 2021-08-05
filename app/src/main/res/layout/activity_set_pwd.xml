@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A4CAC3"
+    tools:context=".Set_Pwd">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp">
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/home"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="357dp"
+        android:layout_height="549dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:ignore="MissingConstraints">
+
+        <ImageButton
+            android:id="@+id/smartphone"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/smartphone" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="스마트폰 잠금 설정"
+            android:textSize="20sp"
+            android:layout_marginBottom="44dp"/>
+
+        <ImageButton
+            android:id="@+id/doorlock"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/doorlock"/>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="LCD 잠금 설정"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

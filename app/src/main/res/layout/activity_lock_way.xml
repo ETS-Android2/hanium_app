@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#A4CAC3"
+    tools:context=".lock_way">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:src="@drawable/home"
+            android:scaleType="fitCenter"
+            ></ImageButton>
+
+        <Button
+            android:id="@+id/final_set"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:text="set"
+            ></Button>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="100dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="잠금방식 설정"
+            android:textSize="36sp"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="50dp">
+
+        <CheckBox
+            android:id="@+id/way_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textSize="24sp"
+            android:layout_marginBottom="15dp"
+            android:onClick="onCheckboxClicked"
+            ></CheckBox>
+
+        <CheckBox
+            android:id="@+id/face_recog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사용자 얼굴 인식"
+            android:textSize="24sp"
+            android:layout_marginBottom="15dp"
+            android:onClick="onCheckboxClicked"
+            ></CheckBox>
+
+        <CheckBox
+            android:id="@+id/way3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="way3"
+            android:textSize="24sp"
+            android:layout_marginBottom="15dp"
+            android:onClick="onCheckboxClicked"
+            ></CheckBox>
+
+        <CheckBox
+            android:id="@+id/way4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="way4"
+            android:textSize="24sp"
+            android:layout_marginBottom="15dp"
+            android:onClick="onCheckboxClicked"
+            ></CheckBox>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/set_value"
+            ></EditText>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -5,14 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
+import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +32,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -38,176 +51,59 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Set;
 
 
 public class Control extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private View drawerView;
-    private MqttAndroidClient mqttAndroidClient;
-    private IMqttToken token;
-    private EditText ET_User;
-    private ImageView mqtt_image;
+    public ImageButton btn_remote;
+    public ImageButton pw_menu;
+    private ImageButton set_user;
+    public ImageButton btn_cam;
+    public  ImageButton set_lock_way;
 
-    NotificationManager manager;
-    NotificationCompat.Builder builder;
+    MyService ms;
+    boolean isService = false;
 
+    ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MyService.MyBinder mb = (MyService.MyBinder)service;
+            ms = mb.getService();
+            isService = true;
+            Log.e("메세지","서비스에 연결됨");
+        }
 
-    private static String CHANNEL_ID = "channel1";
-    private static String CHANEL_NAME = "Channel1";
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isService = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mqttAndroidClient = null;
+        Intent service = new Intent(Control.this, MyService.class);
+        bindService(service, conn, Context.BIND_AUTO_CREATE);
+
         setContentView(R.layout.activity_control);
-        Button btnopen = (Button) findViewById(R.id.btn_open);
-        TextView pwapp = (TextView) findViewById(R.id.pw_app);
-        TextView set_user = (TextView) findViewById(R.id.set_user);
+       // ImageButton btnopen = findViewById(R.id.btn_open);
+        btn_remote = (ImageButton)findViewById(R.id.lockButton);
+        pw_menu = (ImageButton) findViewById(R.id.pw_menu);
+        set_user = findViewById(R.id.userBotton);
+        btn_cam = (ImageButton)findViewById(R.id.Cam_Button);
+        set_lock_way = (ImageButton)findViewById(R.id.set_lock_way);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.menu);
-        drawerView = (View) findViewById(R.id.drawerView);
-        drawerLayout.setDrawerListener(listener);
+        //drawerLayout = (DrawerLayout) findViewById(R.id.menu); 메뉴바 레이아웃
+        //drawerView = (View) findViewById(R.id.drawerView);
+        //drawerLayout.setDrawerListener(listener);
 
-        ET_User = findViewById(R.id.ET_User);
-        mqtt_image = findViewById(R.id.mqtt_img);
-        token = null;
-        mqttAndroidClient = new MqttAndroidClient(this,  "tcp://" + "54.185.18.26" + ":1883", MqttClient.generateClientId());
-
-        // 2번째 파라메터 : 브로커의 ip 주소 , 3번째 파라메터 : client 의 id를 지정함 여기서는 paho 의 자동으로 id를 만들어주는것
-        try {
-            token = mqttAndroidClient.connect(getMqttConnectionOption());    //mqtttoken 이라는것을 만들어 connect option을 달아줌
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    mqttAndroidClient.setBufferOpts(getDisconnectedBufferOptions());    //연결에 성공한경우
-
-                    Log.e("Connect_success", "Success");
-                    try {
-                        mqttAndroidClient.subscribe("common", 0 );   //연결에 성공하면 common 라는 토픽으로 subscribe함
-                        mqttAndroidClient.subscribe("picture",0);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {   //연결에 실패한경우
-                    Log.e("connect_fail", "Failure " + exception.toString());
-                }
-            });
-        } catch (MqttException e)
-        {
-            e.printStackTrace();
-        }
-
-/*
-        try {
-            mqttAndroidClient.subscribe("common", 0, new IMqttMessageListener() {
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                }
-            });
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-*/
-        mqttAndroidClient.setCallback(new MqttCallback() {  //클라이언트의 콜백을 처리하는부분
-
-            @Override
-            public void connectionLost(Throwable cause) {
-            }
-
-            @Override
-
-            public void messageArrived(String topic, MqttMessage message) throws Exception {    //모든 메시지가 올때 Callback method
-                if (topic.equals("common")){     //topic 별로 분기처리하여 작업을 수행할수도있음
-                    String msg = new String(message.getPayload());
-                    ET_User.requestFocus();
-                    ET_User.setText(msg);
-                    Log.e("arrive message : ", msg);
-                }
-                else if(topic.equals("picture")){
-                    byte[] $byteArray = message.getPayload();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray( $byteArray, 0, $byteArray.length ) ;
-                    mqtt_image.setImageBitmap(bitmap);
-                }
-            }
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-            }
-        });
-
-        drawerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-
-        // 2번째 파라메터 : 브로커의 ip 주소 , 3번째 파라메터 : client 의 id를 지정함 여기서는 paho 의 자동으로 id를 만들어주는것
-        try {
-            token = mqttAndroidClient.connect(getMqttConnectionOption());    //mqtttoken 이라는것을 만들어 connect option을 달아줌
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    mqttAndroidClient.setBufferOpts(getDisconnectedBufferOptions());    //연결에 성공한경우
-
-                    Log.e("Connect_success", "Success");
-                    try {
-                        mqttAndroidClient.subscribe("common", 0 );   //연결에 성공하면 common 라는 토픽으로 subscribe함
-                        mqttAndroidClient.subscribe("picture",0);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {   //연결에 실패한경우
-                    Log.e("connect_fail", "Failure " + exception.toString());
-                }
-            });
-        } catch (MqttException e)
-        {
-            e.printStackTrace();
-        }
-/*
-        try {
-            mqttAndroidClient.subscribe("common", 0, new IMqttMessageListener() {
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                }
-            });
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-*/
-        mqttAndroidClient.setCallback(new MqttCallback() {  //클라이언트의 콜백을 처리하는부분
-
-            @Override
-            public void connectionLost(Throwable cause) {
-            }
-
-            @Override
-
-            public void messageArrived(String topic, MqttMessage message) throws Exception {    //모든 메시지가 올때 Callback method
-                if (topic.equals("common")){     //topic 별로 분기처리하여 작업을 수행할수도있음
-                    String msg = new String(message.getPayload());
-                    ET_User.requestFocus();
-                    ET_User.setText(msg);
-                    Log.e("arrive message : ", msg);
-                }
-                else if(topic.equals("picture")){
-                    showNoti();
-                    byte[] $byteArray = message.getPayload();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray( $byteArray, 0, $byteArray.length ) ;
-                    mqtt_image.setImageBitmap(bitmap);
-                }
-            }
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-            }
-        });
-        btnopen.setOnClickListener(new View.OnClickListener() {
+        //ET_User = findViewById(R.id.ET_User); MQTT msg 수신 창
+        //mqtt_image = findViewById(R.id.mqtt_img); 위험인물 감지시 사진 수신
+       /* btnopen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (view.getId()){
@@ -215,7 +111,7 @@ public class Control extends AppCompatActivity {
                         drawerLayout.openDrawer(drawerView);
                 }
             }
-        });
+        });*/
 
         set_user.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,17 +123,41 @@ public class Control extends AppCompatActivity {
 
 
 
-           pwapp.setOnClickListener(new View.OnClickListener() {
+        pw_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Control.this, appLock.class);
-                intent.putExtra(app_lock_const.type,app_lock_const.CHANGE_PASSLOCK);
-                Control.this.startActivityForResult(intent,app_lock_const.CHANGE_PASSLOCK);
+                Intent intent = new Intent(Control.this, Set_Pwd.class);
+                startActivity(intent);
+            }
+        });
+
+
+        btn_remote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Control.this, remote_lock.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent set_user_intent = new Intent(Control.this, Danger.class);
+                startActivity(set_user_intent);
+            }
+        });
+
+        set_lock_way.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent set_lock_way = new Intent(Control.this, lock_way.class);
+                startActivity(set_lock_way);
             }
         });
     }
 
-
+/*
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -256,41 +176,10 @@ public class Control extends AppCompatActivity {
         public void onDrawerStateChanged(int newState) {
         }
     };
+*/
 
 
-    private DisconnectedBufferOptions getDisconnectedBufferOptions() {
-
-        DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
-
-        disconnectedBufferOptions.setBufferEnabled(true);
-
-        disconnectedBufferOptions.setBufferSize(100);
-
-        disconnectedBufferOptions.setPersistBuffer(true);
-
-        disconnectedBufferOptions.setDeleteOldestMessages(false);
-
-        return disconnectedBufferOptions;
-
-    }
-
-
-
-    private MqttConnectOptions getMqttConnectionOption() {
-
-        MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
-
-        mqttConnectOptions.setCleanSession(false);
-
-        mqttConnectOptions.setAutomaticReconnect(true);
-
-        mqttConnectOptions.setWill("aaa", "I am going offline".getBytes(), 1, true);
-
-        return mqttConnectOptions;
-
-    }
-
-
+/*
     public void showNoti(){ builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -320,6 +209,6 @@ public class Control extends AppCompatActivity {
         return byteArray ;
     }
 
-
+*/
 }
 

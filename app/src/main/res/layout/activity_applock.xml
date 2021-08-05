@@ -11,7 +11,7 @@
         android:layout_height="64dp"
         android:gravity="center"
         android:layout_marginTop="16dp"
-        android:text="Smart Safe"
+        android:text="비밀번호 입력"
         android:textSize="20sp"
         android:textColor="@color/black"
         />
@@ -19,16 +19,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         >
-
-        <ImageButton
-            android:id="@+id/visible_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:src="@drawable/visible_btn"
-            ></ImageButton>
 
         <EditText
             android:id="@+id/text_pwd"
@@ -38,6 +30,15 @@
             android:background="@color/white"
             android:textColor="@color/black"
             ></EditText>
+
+        <ImageButton
+            android:id="@+id/visible_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/white"
+            android:src="@drawable/visible_btn"
+            ></ImageButton>
 
     </LinearLayout>
 
@@ -76,7 +77,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="1"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -88,7 +89,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="2"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -100,7 +101,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="3"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -115,7 +116,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="4"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -127,7 +128,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="5"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -139,7 +140,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="6"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -154,7 +155,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="7"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -166,7 +167,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="8"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -178,7 +179,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="9"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -195,7 +196,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="CLEAR"
                     android:textColor="@color/black" />
 
@@ -206,7 +207,7 @@
                     android:layout_margin="5dp"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="0"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -217,7 +218,7 @@
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
                     android:background="@color/white"
-                    android:onClick="onClick"
+                    android:onClick="onSingleClick"
                     android:text="DEL"
                     android:textColor="@color/black" />
             </TableRow>

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -46,6 +48,8 @@ public class appLock extends AppCompatActivity {
     private Random rand = new Random();
     private String fake_num;
 
+    private long mLastClickTime = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +63,6 @@ public class appLock extends AppCompatActivity {
         Visible_btn = (ImageButton)findViewById(R.id.visible_btn);
         Info = (TextView)findViewById(R.id.etInputInfo);
         btn_array = new Button[12];
-        randnum1 = 0;
-        randnum2 = 0;
         btnum = 0;
         pwd_index = 0;
         fake_num = "";
@@ -75,7 +77,7 @@ public class appLock extends AppCompatActivity {
 
         anim = new AlphaAnimation(0.0f,1.0f);
         anim.setDuration(1000);
-        anim.setStartOffset(20);
+        anim.setStartOffset(0);
 
         pwd_set_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +106,10 @@ public class appLock extends AppCompatActivity {
     }
 
     public void Rand_ani(int btn){
+
+        btn_array[randnum1].clearAnimation();
+        btn_array[randnum2].clearAnimation();
+
         String strcurrnetvalue = String.valueOf(btn);
         pwd = pwd + strcurrnetvalue;
         fake_num = fake_num + "*";
@@ -116,7 +122,7 @@ public class appLock extends AppCompatActivity {
 
     }
 
-    public void onClick(View view) {
+    public void onSingleClick(View view) {
 
         if(pwd == ""){
             pwd_index = 0;
@@ -126,7 +132,6 @@ public class appLock extends AppCompatActivity {
             case R.id.btn0:
                 currentValue = 0;
                 Rand_ani(currentValue);
-
                 break;
             case R.id.btn1:
                 currentValue = 1;
@@ -219,6 +224,7 @@ public class appLock extends AppCompatActivity {
 
 
 
+
     private void onClear() {
         pwd = "";
         fake_num = "";
@@ -231,86 +237,98 @@ public class appLock extends AppCompatActivity {
 
     private  void inputType(int type) {
 
-        if (type == app_lock_const.ENABLE_PASSLOCK) {
-            if (oldPwd.isEmpty()) {
-                oldPwd = inputPassword();
+        if (isPassLockSet() && (type != app_lock_const.CHANGE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
+            if (checkPassLock(pwd)) {
+                Intent intent = new Intent(appLock.this, Control.class);
+                startActivity(intent);
+            } else {
+                Info.setText("비밀번호가 일치하지 않습니다"+type);
                 onClear();
-                Info.setText("다시 한번 입력");
-            }  else {
-                if (oldPwd.equals(inputPassword())) {
-                    setPassLock(oldPwd);
-                    setResult(Activity.RESULT_OK);
-                    Info.setText("비밀번호 설정 완료");
-                    Intent Control = new Intent(appLock.this, Control.class);
-                    startActivity(Control);
-                } else{
-                    onClear();
-                    Info.setText("비밀번호가 일치하지 않습니다");
-                }
             }
-        }
+        } else {
 
-        else if (type == app_lock_const.DISABLE_PASSLOCK) {
-            if (isPassLockSet()) {
-                if (checkPassLock(inputPassword())) {
-                    removePassLock();
-                    setResult(Activity.RESULT_OK);
-                    finish();
+            if (type == app_lock_const.ENABLE_PASSLOCK) {
+                if (oldPwd.isEmpty()) {
+                    oldPwd = inputPassword();
+                    onClear();
+                    Info.setText("다시 한번 입력");
                 } else {
-                    Info.setText("비밀번호가 틀립니다 (DISABLE_PASSLOCK)");
-                    onClear();
+                    if (oldPwd.equals(inputPassword())) {
+                        setPassLock(oldPwd);
+                        setResult(Activity.RESULT_OK);
+                        Info.setText("비밀번호 설정 완료");
+                        Intent Service = new Intent(appLock.this, MyService.class);
+                        startService(Service);//서비스 시작
+                        Log.e("Service", "서비스 실행");
+                        Intent Control = new Intent(appLock.this, Control.class);
+                        startActivity(Control);//메인 화면 이동
+                    } else {
+                        onClear();
+                        Info.setText("비밀번호가 일치하지 않습니다11");
+                    }
                 }
-            } else {
-                setResult(Activity.RESULT_CANCELED);
-                finish();
+            } else if (type == app_lock_const.DISABLE_PASSLOCK) {
+                if (isPassLockSet()) {
+                    if (checkPassLock(inputPassword())) {
+                        removePassLock();
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    } else {
+                        Info.setText("비밀번호가 틀립니다 (DISABLE_PASSLOCK)");
+                        onClear();
+                    }
+                } else {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
             }
-        }
 ////////금고 비활성화
-
-        else if (type == app_lock_const.UNLOCK_PASSWORD) {
-            if (checkPassLock(inputPassword())) {
-                setResult(Activity.RESULT_OK);
-                Intent Control = new Intent(appLock.this, Control.class);
-                startActivity(Control);
-            } else {
-                Info.setText("비밀번호가 틀립니다 (UNLOCK_PASSWORD)");
-                onClear();
-            }
+//
+//        else if (type == app_lock_const.UNLOCK_PASSWORD) {
+//            if (checkPassLock(inputPassword())) {
+//                setResult(Activity.RESULT_OK);
+//                Intent Control = new Intent(appLock.this, Control.class);
+//                startActivity(Control);
+//            } else {
+//                Info.setText("비밀번호가 틀립니다 (UNLOCK_PASSWORD)");
+//                onClear();
+//            }
+//        }
         }
 
-        else if (type == app_lock_const.CHANGE_PASSLOCK) {
+        if (type == app_lock_const.CHANGE_PASSLOCK) {
             if (checkPassLock(inputPassword()) && !changePwdUnlock) {
                 changePwdUnlock = true;
                 newpwd = inputPassword();
                 onClear();
                 Info.setText("새로운 비밀번호 입력");
-            }
-            else if(checkPassLock(newpwd)){
+            } else if (checkPassLock(newpwd)) {
                 changePwdUnlock = true;
                 newpwd = inputPassword();
                 onClear();
                 Info.setText("다시 한번 입력");
-            }
-            else{
-                if(newpwd.equals(inputPassword())){
+            } else {
+                if (newpwd.equals(inputPassword())) {
                     setPassLock(inputPassword());
                     setResult(Activity.RESULT_OK);
                     Intent Control = new Intent(appLock.this, Control.class);
                     startActivity(Control);
-                }else{
+                } else {
                     changePwdUnlock = false;
                     oldPwd = inputPassword();
                     onClear();
-                    Info.setText("비밀번호가 일치하지 않습니다");
+                    Info.setText("비밀번호가 일치하지 않습니다33");
                 }
             }
         }
-                else{
-                Info.setText("비밀번호가 틀립니다" + type);
-                changePwdUnlock = false;
-                onClear();
-            }
+//         else {
+//            Info.setText("비밀번호가 틀립니다" + type);
+//            changePwdUnlock = false;
+//            onClear();
+//        }
     }
+
+
 
     void setPassLock(String password) {
         this.editor.putString("appLock", password);

@@ -4,42 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#A4CAC3"
     tools:context=".User_seting">
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Take Picture"
-            android:id="@+id/button"
-            android:onClick="onClick"
-            ></Button>
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        >
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="67dp"
+            android:layout_height="65dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/home" />
+
 
         <Button
+            android:id="@+id/picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
+            android:text="금고에 등록될 사진 촬영"
+            android:textColor="#A4CAC3"
+            android:textColorLink="#A4CAC3"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/set_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
+            android:text="금고에 등록될 사진 변경"
+            android:textColor="#A4CAC3"
+            android:textColorLink="#A4CAC3"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text= "Set_user"
-            android:id="@+id/set_user_btn"
-            android:onClick="onClick"
-            ></Button>
+            android:id="@+id/photo"
+            ></ImageView>
 
     </LinearLayout>
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/photo"
-        ></ImageView>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:id="@+id/et_user_set"
-        ></EditText>
 
 </LinearLayout>
