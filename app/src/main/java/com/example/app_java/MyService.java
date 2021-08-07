@@ -56,11 +56,11 @@ public class MyService extends Service {
         if (intent == null) {
             return Service.START_STICKY;//서비스가 종료되도 다시 자동 실행
         } else {
-            String lock_way = intent.getStringExtra("way_value");
-            if (lock_way != null) {
-                Log.e("lock_way -> Service", lock_way);
+            String TO_MCU = intent.getStringExtra("TO_MCU");
+            if (TO_MCU != null) {
+                Log.e("Activity -> Service", TO_MCU);
                 try {
-                    mqttAndroidClient.publish("TO_MCU", lock_way.getBytes(), 0 , false );
+                    mqttAndroidClient.publish("TO_MCU", TO_MCU.getBytes(), 0 , false );
                     //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
                 } catch (MqttException e) {
                     e.printStackTrace();

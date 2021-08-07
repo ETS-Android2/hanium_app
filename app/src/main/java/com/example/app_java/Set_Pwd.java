@@ -41,7 +41,9 @@ public class Set_Pwd extends AppCompatActivity {
         door_pwd_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //MCU로 데이터 송신코드 작성
+                Intent intent_chg_door = new Intent(Set_Pwd.this, appLock.class);
+                intent_chg_door.putExtra(app_lock_const.type, app_lock_const.SET_TOUCHPAD);
+                Set_Pwd.this.startActivityForResult(intent_chg_door, app_lock_const.SET_TOUCHPAD);
             }
         });
     }

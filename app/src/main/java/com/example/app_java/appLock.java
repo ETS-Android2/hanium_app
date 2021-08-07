@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.app_java.R;
@@ -32,10 +33,14 @@ public class appLock extends AppCompatActivity {
     private String newpwd = "";
     private int pwd_index;
     private boolean changePwdUnlock = false;
+    private boolean changepwddoorlock = false;
     private Animation anim;
 
+
     SharedPreferences sharePref;
+    SharedPreferences sharePref_door;
     SharedPreferences.Editor editor;
+    SharedPreferences.Editor editor_door;
     EditText et_pwd;
     Button pwd_set_btn;
     ImageButton Visible_btn;
@@ -47,6 +52,7 @@ public class appLock extends AppCompatActivity {
     private int randnum1 ,randnum2;
     private Random rand = new Random();
     private String fake_num;
+    private String door_pwd;
 
     private long mLastClickTime = 0;
 
@@ -56,7 +62,9 @@ public class appLock extends AppCompatActivity {
         setContentView(R.layout.activity_applock);
 
         sharePref = this.getSharedPreferences("appLock", Context.MODE_PRIVATE);
+        sharePref_door = this.getSharedPreferences("doorLock",Context.MODE_PRIVATE);
         editor = sharePref.edit();
+        editor_door = sharePref_door.edit();
 
         et_pwd = (EditText)findViewById(R.id.text_pwd);
         pwd_set_btn = (Button)findViewById(R.id.set_pwd);
@@ -67,6 +75,8 @@ public class appLock extends AppCompatActivity {
         pwd_index = 0;
         fake_num = "";
         pwd = "";
+        door_pwd = "";
+
         int[] btn_id = {
                 R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,
                 R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9,R.id.btnClear,R.id.btnErase
@@ -82,6 +92,7 @@ public class appLock extends AppCompatActivity {
         pwd_set_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pwd = inputPassword();
                 int type = getIntent().getIntExtra("type", 0);
                 inputType(type);
             }
@@ -119,7 +130,7 @@ public class appLock extends AppCompatActivity {
 
         btn_array[randnum1].startAnimation(anim);
         btn_array[randnum2].startAnimation(anim);
-
+        Log.e("num",strcurrnetvalue);
     }
 
     public void onSingleClick(View view) {
@@ -318,6 +329,27 @@ public class appLock extends AppCompatActivity {
                     oldPwd = inputPassword();
                     onClear();
                     Info.setText("비밀번호가 일치하지 않습니다33");
+                }
+            }
+        }
+
+        if(type == app_lock_const.SET_TOUCHPAD){
+            if(changepwddoorlock == false) {
+
+                Log.e("door_pwd","w" + pwd);
+                onClear();
+                Info.setText("다시한번 입력");
+                changepwddoorlock = true;
+            }else {
+                if (pwd.equals(inputPassword())) {
+                    Intent set_door_pwd = new Intent(appLock.this, MyService.class);
+                    set_door_pwd.putExtra("TO_MCU", "SPP" + pwd + "\\n");
+                    startService(set_door_pwd);
+                    Intent home = new Intent(appLock.this, Control.class);
+                    startActivity(home);
+                } else {
+                    Info.setText("비밀번호가 일치하지 않습니다.");
+                    onClear();
                 }
             }
         }

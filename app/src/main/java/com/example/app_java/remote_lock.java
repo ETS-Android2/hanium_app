@@ -2,8 +2,10 @@ package com.example.app_java;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -23,5 +25,18 @@ public class remote_lock extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void remote_OnClick(View view){
+        Intent intent = new Intent(remote_lock.this, MyService.class);
+        switch (view.getId()){
+            case R.id.set_LOCK:
+                intent.putExtra("TO_MCU","SLO0\\n");
+                break;
+            case R.id.set_OPEN:
+                intent.putExtra("TO_MCU","SLO1\\n");
+                break;
+        }
+        startService(intent);
     }
 }

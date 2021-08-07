@@ -80,9 +80,9 @@ public class lock_way extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.e("checkbox", "set");
-                String result_data = "SLW" + way_data[0] + way_data[1] + way_data[2] + way_data[3];
+                String result_data = "SLW" + way_data[0] + way_data[1] + way_data[2] + way_data[3] + "\\n";
                 Intent set_way = new Intent(lock_way.this, MyService.class);
-                set_way.putExtra("way_value",result_data);
+                set_way.putExtra("TO_MCU",result_data);
                 startService(set_way);
                 Log.e("way_data", result_data);
                 set_value.setText(result_data);

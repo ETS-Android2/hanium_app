@@ -46,17 +46,18 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/chi4"
+                android:id="@+id/set_LOCK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkable="true" />
+                android:checkable="true"
+                android:onClick="remote_OnClick"/>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1차 잠금" />
+                android:text="2차 보안 잠금" />
         </LinearLayout>
 
         <LinearLayout
@@ -65,16 +66,17 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/chip5"
+                android:id="@+id/set_OPEN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="remote_OnClick"
             />
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2차 잠금" />
+                android:text="2차 보안 해제" />
 
         </LinearLayout>
     </LinearLayout>

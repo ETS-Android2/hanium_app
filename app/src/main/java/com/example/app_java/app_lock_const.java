@@ -5,6 +5,6 @@ class app_lock_const extends Object{
     static final int ENABLE_PASSLOCK = 1;
     static final int DISABLE_PASSLOCK = 2;
     static final int CHANGE_PASSLOCK = 3;
-    static final int UNLOCK_PASSWORD = 4;
+    static final int SET_TOUCHPAD = 4;
 
 }
