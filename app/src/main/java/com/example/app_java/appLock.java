@@ -56,6 +56,9 @@ public class appLock extends AppCompatActivity {
 
     private long mLastClickTime = 0;
 
+    private int MCU_LOCK_num = 0;
+    private boolean LOCK_NUM_FAIL = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,7 +251,7 @@ public class appLock extends AppCompatActivity {
 
     private  void inputType(int type) {
 
-        if (isPassLockSet() && (type != app_lock_const.CHANGE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
+        if (isPassLockSet() && (type == app_lock_const.ENABLE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
             if (checkPassLock(pwd)) {
                 Intent intent = new Intent(appLock.this, Control.class);
                 startActivity(intent);
@@ -268,6 +271,7 @@ public class appLock extends AppCompatActivity {
                         setPassLock(oldPwd);
                         setResult(Activity.RESULT_OK);
                         Info.setText("비밀번호 설정 완료");
+                        onClear();
                         Intent Service = new Intent(appLock.this, MyService.class);
                         startService(Service);//서비스 시작
                         Log.e("Service", "서비스 실행");
@@ -335,13 +339,14 @@ public class appLock extends AppCompatActivity {
 
         if(type == app_lock_const.SET_TOUCHPAD){
             if(changepwddoorlock == false) {
-
+                pwd = inputPassword();
                 Log.e("door_pwd","w" + pwd);
                 onClear();
                 Info.setText("다시한번 입력");
                 changepwddoorlock = true;
             }else {
                 if (pwd.equals(inputPassword())) {
+                    changepwddoorlock = false;
                     Intent set_door_pwd = new Intent(appLock.this, MyService.class);
                     set_door_pwd.putExtra("TO_MCU", "SPP" + pwd + "\\n");
                     startService(set_door_pwd);
@@ -351,6 +356,33 @@ public class appLock extends AppCompatActivity {
                     Info.setText("비밀번호가 일치하지 않습니다.");
                     onClear();
                 }
+            }
+        }
+
+        if(type == app_lock_const.APP_MCULOCK){
+            pwd = inputPassword();
+            if(checkPassLock(pwd)){//RPL은 Result Passward Lock
+                                   // PTP는 Passward_result To Pad
+                onClear();
+                Intent success = new Intent(appLock.this, MyService.class);
+                success.putExtra("TO_MCU","PTP1\\n");
+                startService(success);
+                Intent intent = new Intent(appLock.this, Control.class);
+                startActivity(intent);
+            }else if(!checkPassLock(pwd)){
+                if(MCU_LOCK_num == 4){
+                    LOCK_NUM_FAIL = true;
+                    Toast.makeText(getApplicationContext(),"비밀번호 5회 이상 불일치 다시 시도 해주세요.",Toast.LENGTH_LONG).show();
+                    Intent fail =  new Intent(appLock.this, MyService.class);
+                    fail.putExtra("TO_MCU","PTP0\\n");
+                    startService(fail);
+                    Intent intent = new Intent(appLock.this, Control.class);
+                    startActivity(intent);
+                    //3회 이상 비밀번호 실패시 다시 시도 --> 요청을 다시 보내야함
+                }
+                MCU_LOCK_num++;
+                Info.setText("비밀번호가 일치하지 않습니다 (" + MCU_LOCK_num +"/5)" );
+                onClear();
             }
         }
 //         else {

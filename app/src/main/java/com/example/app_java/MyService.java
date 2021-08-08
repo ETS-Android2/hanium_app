@@ -31,6 +31,7 @@ public class MyService extends Service {
 
     IBinder binder = new MyBinder();
     public byte[] $byteArray;
+    public String msg_mcu;
 
     class MyBinder extends Binder{
         MyService getService(){
@@ -48,6 +49,9 @@ public class MyService extends Service {
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
 
+    private boolean request_from_MCU = false;
+    private boolean change_notice_msg = false;
+
     public MyService() {
     }
 
@@ -58,7 +62,7 @@ public class MyService extends Service {
         } else {
             String TO_MCU = intent.getStringExtra("TO_MCU");
             if (TO_MCU != null) {
-                Log.e("Activity -> Service", TO_MCU);
+                Log.e("TO_MCU", TO_MCU);
                 try {
                     mqttAndroidClient.publish("TO_MCU", TO_MCU.getBytes(), 0 , false );
                     //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
@@ -66,6 +70,7 @@ public class MyService extends Service {
                     e.printStackTrace();
                 }
             }
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -83,6 +88,7 @@ public class MyService extends Service {
         super.onCreate();
         $byteArray = null;
         token = null;
+        msg_mcu = null;
         mqttAndroidClient = new MqttAndroidClient(this, "tcp://" + "54.185.18.26" + ":1883", MqttClient.generateClientId());
 
         // 2번째 파라메터 : 브로커의 ip 주소 , 3번째 파라메터 : client 의 id를 지정함 여기서는 paho 의 자동으로 id를 만들어주는것
@@ -96,6 +102,7 @@ public class MyService extends Service {
                     try {
                         mqttAndroidClient.subscribe("common", 0);   //연결에 성공하면 common 라는 토픽으로 subscribe함
                         mqttAndroidClient.subscribe("picture", 0);
+                        mqttAndroidClient.subscribe("TO_APP",0);
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -133,22 +140,38 @@ public class MyService extends Service {
                 if (topic.equals("common")) {     //topic 별로 분기처리하여 작업을 수행할수도있음
                     String msg = new String(message.getPayload());
                     //msg -->얼굴인식 확인용 msg
-                    Log.e("arrive message : ", msg);
+                    //Log.e("arrive message : ", msg);
                 } else if (topic.equals("picture")) {
                     $byteArray = message.getPayload();
-                    showNoti($byteArray);
+                    showNoti($byteArray, request_from_MCU, change_notice_msg);
                     String response = "OK";
                     try {
-                        mqttAndroidClient.publish("pic_response", response.getBytes(), 0 , false );
+                        mqttAndroidClient.publish("pic_response", response.getBytes(), 0, false);
                         //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
                     } catch (MqttException e) {
                         e.printStackTrace();
+                    }
+                }
+                    else if(topic.equals("TO_APP")){
+                        msg_mcu = new String(message.getPayload());
+                        if(msg_mcu.equals("RPL1\n")){
+                            request_from_MCU = true;
+                            Log.e("Result","RPL1");
+                        }
+                        else if(msg_mcu.equals("FAS1\n")){
+                            change_notice_msg = true;
+                        }
+                        Log.e("to_app",msg_mcu);
+                        showNoti($byteArray, request_from_MCU, change_notice_msg);
+
+                        request_from_MCU = false;
+                        change_notice_msg = false;
                     }
 //                    Intent danger_data = new Intent(MyService.this, Danger.class);
 //                    danger_data.putExtra("picture",$byteArray);
 //                    startActivity(danger_data);
                     //bitmap --> 위험인물 이미지
-                }
+
             }
 
             @Override
@@ -193,12 +216,17 @@ public class MyService extends Service {
 
     }
 
-    public void showNoti(byte[] data){builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    public void showNoti(byte[] data, boolean flag_Request, boolean flag_access){builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        Intent intent = new Intent(getApplicationContext(),Danger.class);
-        intent.putExtra("picture",data);
+        Intent intent;
+        if(flag_Request == true){
+            intent = new Intent(getApplicationContext(), appLock.class);
+            intent.putExtra(app_lock_const.type, app_lock_const.APP_MCULOCK);
+        }else {
+            intent = new Intent(getApplicationContext(), Danger.class);
+            intent.putExtra("picture", data);
+        }
 
         PendingIntent mPendingIntent = PendingIntent.getActivity(
                 MyService.this,
@@ -217,16 +245,24 @@ public class MyService extends Service {
         }
         builder.setContentIntent(mPendingIntent);
 
-        builder.setContentTitle("위험 인물 감지!");
-
-        builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
-
+        if(flag_Request == true){
+            builder.setContentTitle("잠금해제 요청");
+            builder.setContentText("금고로부터 어플로 잠금해제 요청입니다!");
+        }else {
+            if(flag_access == true){
+                builder.setContentTitle("강제 접근");
+                builder.setContentText("누군가 금고에 강제로 접근하려 합니다!.");
+            }
+            else {
+                builder.setContentTitle("위험 인물 감지!");
+                builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
+            }
+        }
         builder.setSmallIcon(R.drawable.notification_icon);
 
         Notification notification = builder.build();
 
         manager.notify(1,notification);
-
 
     }
 
