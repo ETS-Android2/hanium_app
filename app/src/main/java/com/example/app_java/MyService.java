@@ -8,11 +8,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -39,8 +41,8 @@ public class MyService extends Service {
         }
     }
 
-    private MqttAndroidClient mqttAndroidClient;
-    private IMqttToken token;
+    public static MqttAndroidClient mqttAndroidClient;
+    public IMqttToken token;
 
     NotificationManager manager;
     NotificationCompat.Builder builder;
@@ -61,6 +63,8 @@ public class MyService extends Service {
             return Service.START_STICKY;//서비스가 종료되도 다시 자동 실행
         } else {
             String TO_MCU = intent.getStringExtra("TO_MCU");
+            byte[] set_face_user = intent.getByteArrayExtra("set_face_user");
+            byte[] set_face_danger = intent.getByteArrayExtra("set_face_danger");
             if (TO_MCU != null) {
                 Log.e("TO_MCU", TO_MCU);
                 try {
@@ -71,7 +75,74 @@ public class MyService extends Service {
                 }
             }
 
+//            if (set_face_user != null) {
+//                Log.e("set_face_user", "Send!");
+//                try {
+//                    mqttAndroidClient.publish("set_face_user", set_face_user, 0 , false );
+//                    //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
+//                } catch (MqttException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            if (set_face_danger != null) {
+//                Log.e("set_face_danger", "Send!");
+//                try {
+//                    mqttAndroidClient.publish("set_face_danger", set_face_danger, 0 , false );
+//                    //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
+//                } catch (MqttException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
+        mqttAndroidClient.setCallback(new MqttCallback() {  //클라이언트의 콜백을 처리하는부분
+
+            @Override
+            public void connectionLost(Throwable cause) {
+            }
+
+            @Override
+
+            public void messageArrived(String topic, MqttMessage message) throws Exception {    //모든 메시지가 올때 Callback method
+//                if (topic.equals("common")) {     //topic 별로 분기처리하여 작업을 수행할수도있음
+//                    String msg = new String(message.getPayload());
+//                    //msg -->얼굴인식 확인용 msg
+//                    //Log.e("arrive message : ", msg);}
+                if (topic.equals("picture")) {
+                    $byteArray = message.getPayload();
+                }
+                else if(topic.equals("TO_APP")){
+
+                    msg_mcu = new String(message.getPayload());
+                    if(msg_mcu.equals("RAU\n")){
+                        request_from_MCU = true;
+                        Log.e("Result","RAU");
+                    }
+                    else if(msg_mcu.equals("FIS\n")){
+                        change_notice_msg = true;
+                    }
+                    else if(msg_mcu.equals("Danger\n"))
+                    {
+                        showNoti($byteArray, request_from_MCU, change_notice_msg);
+                    }
+
+                    Log.e("to_app",msg_mcu);
+                    showNoti($byteArray, request_from_MCU, change_notice_msg);
+
+                    request_from_MCU = false;
+                    change_notice_msg = false;
+                }
+//                    Intent danger_data = new Intent(MyService.this, Danger.class);
+//                    danger_data.putExtra("picture",$byteArray);
+//                    startActivity(danger_data);
+                //bitmap --> 위험인물 이미지
+
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+            }
+        });
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -128,56 +199,6 @@ public class MyService extends Service {
             e.printStackTrace();
         }
 */
-        mqttAndroidClient.setCallback(new MqttCallback() {  //클라이언트의 콜백을 처리하는부분
-
-            @Override
-            public void connectionLost(Throwable cause) {
-            }
-
-            @Override
-
-            public void messageArrived(String topic, MqttMessage message) throws Exception {    //모든 메시지가 올때 Callback method
-                if (topic.equals("common")) {     //topic 별로 분기처리하여 작업을 수행할수도있음
-                    String msg = new String(message.getPayload());
-                    //msg -->얼굴인식 확인용 msg
-                    //Log.e("arrive message : ", msg);
-                } else if (topic.equals("picture")) {
-                    $byteArray = message.getPayload();
-                    showNoti($byteArray, request_from_MCU, change_notice_msg);
-                    String response = "OK";
-                    try {
-                        mqttAndroidClient.publish("pic_response", response.getBytes(), 0, false);
-                        //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-                    else if(topic.equals("TO_APP")){
-                        msg_mcu = new String(message.getPayload());
-                        if(msg_mcu.equals("RPL1\n")){
-                            request_from_MCU = true;
-                            Log.e("Result","RPL1");
-                        }
-                        else if(msg_mcu.equals("FAS1\n")){
-                            change_notice_msg = true;
-                        }
-                        Log.e("to_app",msg_mcu);
-                        showNoti($byteArray, request_from_MCU, change_notice_msg);
-
-                        request_from_MCU = false;
-                        change_notice_msg = false;
-                    }
-//                    Intent danger_data = new Intent(MyService.this, Danger.class);
-//                    danger_data.putExtra("picture",$byteArray);
-//                    startActivity(danger_data);
-                    //bitmap --> 위험인물 이미지
-
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-            }
-        });
 
     }
 
@@ -253,12 +274,14 @@ public class MyService extends Service {
                 builder.setContentTitle("강제 접근");
                 builder.setContentText("누군가 금고에 강제로 접근하려 합니다!.");
             }
-            else {
+            else{
                 builder.setContentTitle("위험 인물 감지!");
                 builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
             }
         }
-        builder.setSmallIcon(R.drawable.notification_icon);
+        builder.setAutoCancel(true);
+
+        builder.setSmallIcon(R.drawable.noti);
 
         Notification notification = builder.build();
 

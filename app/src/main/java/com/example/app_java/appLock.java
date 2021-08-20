@@ -275,6 +275,7 @@ public class appLock extends AppCompatActivity {
                         Intent Service = new Intent(appLock.this, MyService.class);
                         startService(Service);//서비스 시작
                         Log.e("Service", "서비스 실행");
+                        Toast.makeText(getApplicationContext(),"서버에 연결됨",Toast.LENGTH_LONG).show();
                         Intent Control = new Intent(appLock.this, Control.class);
                         startActivity(Control);//메인 화면 이동
                     } else {
@@ -348,7 +349,7 @@ public class appLock extends AppCompatActivity {
                 if (pwd.equals(inputPassword())) {
                     changepwddoorlock = false;
                     Intent set_door_pwd = new Intent(appLock.this, MyService.class);
-                    set_door_pwd.putExtra("TO_MCU", "SPP" + pwd + "\\n");
+                    set_door_pwd.putExtra("TO_MCU", "SPP" + pwd + "\n");
                     startService(set_door_pwd);
                     Intent home = new Intent(appLock.this, Control.class);
                     startActivity(home);
@@ -365,7 +366,7 @@ public class appLock extends AppCompatActivity {
                                    // PTP는 Passward_result To Pad
                 onClear();
                 Intent success = new Intent(appLock.this, MyService.class);
-                success.putExtra("TO_MCU","PTP1\\n");
+                success.putExtra("TO_MCU","AUR1\n");
                 startService(success);
                 Intent intent = new Intent(appLock.this, Control.class);
                 startActivity(intent);
@@ -374,7 +375,7 @@ public class appLock extends AppCompatActivity {
                     LOCK_NUM_FAIL = true;
                     Toast.makeText(getApplicationContext(),"비밀번호 5회 이상 불일치 다시 시도 해주세요.",Toast.LENGTH_LONG).show();
                     Intent fail =  new Intent(appLock.this, MyService.class);
-                    fail.putExtra("TO_MCU","PTP0\\n");
+                    fail.putExtra("TO_MCU","AUR0\n");
                     startService(fail);
                     Intent intent = new Intent(appLock.this, Control.class);
                     startActivity(intent);

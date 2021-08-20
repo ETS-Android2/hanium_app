@@ -3,11 +3,14 @@ package com.example.app_java;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,7 +18,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,45 +29,53 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User_seting extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 672;
+    private static final int REQUEST_CODE_Gallery = 0;
     private String imageFilePath;
     private Uri photoUri;
-    private MqttAndroidClient mqttAndroidClient;
-    private IMqttToken token;
+
+
+    private Button btn_take_picture;
+    private Button btn_take_gallery;
+    private Button set_danger_btn;
     private Button set_user_btn;
-    private Button btn_picture;
     private ImageButton btn_home;
+    private ImageView view_setimage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_seting);
-        token = null;
-        set_user_btn = findViewById(R.id.set_user);
-        btn_picture = findViewById(R.id.picture);
+
+        set_user_btn = findViewById(R.id.set_user_btn);
+        set_danger_btn = findViewById(R.id.set_danger_btn);
+        btn_take_picture = findViewById(R.id.picture);
+        btn_take_gallery = findViewById(R.id.gallery);
         btn_home = (ImageButton)findViewById(R.id.homeButton);
-        btn_picture.setOnClickListener(new View.OnClickListener() {
+        view_setimage = (ImageView)findViewById(R.id.photo);
+
+        init();
+
+
+        btn_take_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int permissionCheck = ContextCompat.checkSelfPermission(User_seting.this, Manifest.permission.CAMERA);
                 if (permissionCheck == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(User_seting.this, new String[]{Manifest.permission.CAMERA}, 0);
+
                 } else {
                     sendTakePhotoIntent();
                 }
@@ -73,33 +83,16 @@ public class User_seting extends AppCompatActivity {
             }
         });
 
-        mqttAndroidClient = new MqttAndroidClient(this,  "tcp://" + "54.185.18.26" + ":1883", MqttClient.generateClientId());
+        btn_take_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, REQUEST_CODE_Gallery);
+            }
+        });
 
-        // 2번째 파라메터 : 브로커의 ip 주소 , 3번째 파라메터 : client 의 id를 지정함 여기서는 paho 의 자동으로 id를 만들어주는것
-        try {
-            token = mqttAndroidClient.connect(getMqttConnectionOption());    //mqtttoken 이라는것을 만들어 connect option을 달아줌
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    mqttAndroidClient.setBufferOpts(getDisconnectedBufferOptions());    //연결에 성공한경우
-
-                    Log.e("Connect_success", "Success");
-                    try {
-                        mqttAndroidClient.subscribe("common", 0 );   //연결에 성공하면 common 라는 토픽으로 subscribe함
-                        mqttAndroidClient.subscribe("picture",0);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {   //연결에 실패한경우
-                    Log.e("connect_fail", "Failure " + exception.toString());
-                }
-            });
-        } catch (MqttException e)
-        {
-            e.printStackTrace();
-        }
         btn_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,36 +102,53 @@ public class User_seting extends AppCompatActivity {
         });
 
 
-        set_user_btn.setOnClickListener(new View.OnClickListener() {
+        btn_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
-                ExifInterface exif = null;
-
-                try {
-                    exif = new ExifInterface(imageFilePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                int exifOrientation;
-                int exifDegree;
-
-                if (exif != null) {
-                    exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    exifDegree = exifOrientationToDegrees(exifOrientation);
-                } else {
-                    exifDegree = 0;
-                }
-                try {
-                    mqttAndroidClient.publish("set_user", bitmapToByteArray(rotate(bitmap, exifDegree)), 0 , false );
-                    //버튼을 클릭하면 jmlee 라는 토픽으로 메시지를 보냄
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
+                Intent intent_home = new Intent(User_seting.this, Control.class );
+                startActivity(intent_home);
             }
         });
 
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_home = new Intent(User_seting.this, Control.class );
+                startActivity(intent_home);
+            }
+        });
+
+    }
+
+    public void onClick(View view) {
+
+        BitmapDrawable drawable = (BitmapDrawable) view_setimage.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+
+        switch (view.getId()){
+            case R.id.set_user_btn:
+                //set_user_intent.putExtra("set_face_user",bitmapToByteArray(bitmap));
+                try {
+                    MyService.mqttAndroidClient.publish("set_face_user",bitmapToByteArray(bitmap), 0 , false);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+                Log.e("사용자 설정","Clicked");
+                Toast.makeText(getApplicationContext(),"설정이 완료되었습니다",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.set_danger_btn:
+                //set_danger_intent.putExtra("set_face_danger",bitmapToByteArray(bitmap));
+                try {
+                    MyService.mqttAndroidClient.publish("set_face_danger",bitmapToByteArray(bitmap), 0 , false);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+
+                Log.e("위험인물 설정 설정","Clicked");
+                Toast.makeText(getApplicationContext(),"설정이 완료되었습니다",Toast.LENGTH_LONG).show();
+                break;
+        }
+        this.init();
     }
 
 
@@ -181,9 +191,61 @@ public class User_seting extends AppCompatActivity {
                 }
 
                 ((ImageView) findViewById(R.id.photo)).setImageBitmap(rotate(bitmap, exifDegree));
+                set_user_btn.setEnabled(true);
+                set_user_btn.setVisibility(View.VISIBLE);
+                set_danger_btn.setEnabled(true);
+                set_danger_btn.setVisibility(View.VISIBLE);
 
             }
+
+            if(requestCode == REQUEST_CODE_Gallery)
+            {
+                if(resultCode == RESULT_OK)
+                {
+                    try{
+                        InputStream in = getContentResolver().openInputStream(data.getData());
+
+                        Bitmap img = BitmapFactory.decodeStream(in);
+
+                        ExifInterface exif = null;
+                        try {
+                            exif = new ExifInterface(String.valueOf(img));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        int exifOrientation;
+                        int exifDegree;
+
+                        if (exif != null) {
+                            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                            exifDegree = exifOrientationToDegrees(exifOrientation);
+                        } else {
+                            exifDegree = 0;
+                        }
+
+                        in.close();
+
+                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(img);
+                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(rotate(img,exifDegree));
+                        set_user_btn.setEnabled(true);
+                        set_user_btn.setVisibility(View.VISIBLE);
+                        set_danger_btn.setEnabled(true);
+                        set_danger_btn.setVisibility(View.VISIBLE);
+                    }catch(Exception e)
+                    {
+                        Toast.makeText(this, "갤러리 접근 중 오류 발생", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+                else if(resultCode == RESULT_CANCELED)
+                {
+                    Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+                }
+            }
+
         }
+
 
 
         private int exifOrientationToDegrees ( int exifOrientation){
@@ -242,37 +304,11 @@ public class User_seting extends AppCompatActivity {
             return byteArray;
         }
 
-    private DisconnectedBufferOptions getDisconnectedBufferOptions() {
-
-        DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
-
-        disconnectedBufferOptions.setBufferEnabled(true);
-
-        disconnectedBufferOptions.setBufferSize(100);
-
-        disconnectedBufferOptions.setPersistBuffer(true);
-
-        disconnectedBufferOptions.setDeleteOldestMessages(false);
-
-        return disconnectedBufferOptions;
-
-    }
-
-
-
-    private MqttConnectOptions getMqttConnectionOption() {
-
-        MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
-
-        mqttConnectOptions.setCleanSession(false);
-
-        mqttConnectOptions.setAutomaticReconnect(true);
-
-        mqttConnectOptions.setWill("aaa", "I am going offline".getBytes(), 1, true);
-
-        return mqttConnectOptions;
-
-    }
-
-
+        private void  init(){
+            set_user_btn.setEnabled(false);
+            set_user_btn.setVisibility(View.INVISIBLE);
+            set_danger_btn.setEnabled(false);
+            set_danger_btn.setVisibility(View.INVISIBLE);
+            view_setimage.setImageBitmap(null);
+        }
     }

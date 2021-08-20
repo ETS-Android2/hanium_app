@@ -47,14 +47,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/set_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:background="@color/white"
             android:text="OK"

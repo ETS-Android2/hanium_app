@@ -5,53 +5,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#A4CAC3"
-    tools:context=".User_seting">
+    tools:context=".User_seting"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:orientation="vertical"
         >
 
-        <ImageButton
-            android:id="@+id/homeButton"
-            android:layout_width="67dp"
-            android:layout_height="65dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/home" />
-
-
-        <Button
-            android:id="@+id/picture"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:backgroundTint="#FFFFFF"
-            android:text="금고에 등록될 사진 촬영"
-            android:textColor="#A4CAC3"
-            android:textColorLink="#A4CAC3"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            >
+            <ImageButton
+                android:id="@+id/homeButton"
+                android:layout_width="67dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/home" />
+            <Button
+                android:id="@+id/set_user_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="67dp"
+                android:text="사용자 사진 변경"
+                android:onClick="onClick"
+                ></Button>
 
-        <Button
-            android:id="@+id/set_user"
+            <Button
+                android:id="@+id/set_danger_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"
+                android:text = "위험인물 사진 변경"
+                android:onClick="onClick">
+            </Button>
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:backgroundTint="#FFFFFF"
-            android:text="금고에 등록될 사진 변경"
-            android:textColor="#A4CAC3"
-            android:textColorLink="#A4CAC3"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/picture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
+                android:text="금고에 등록될 사진 촬영"
+                android:textColor="#A4CAC3"
+                android:textColorLink="#A4CAC3"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <Button
+                android:id="@+id/gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
+                android:text="금고에 등록될 사진 가져오기"
+                android:textColor="#A4CAC3"
+                android:textColorLink="#A4CAC3"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/photo"
-            ></ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/photo"
+                ></ImageView>
+        </LinearLayout>
+
 
     </LinearLayout>
 

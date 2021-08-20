@@ -31,10 +31,22 @@ public class remote_lock extends AppCompatActivity {
         Intent intent = new Intent(remote_lock.this, MyService.class);
         switch (view.getId()){
             case R.id.set_LOCK:
-                intent.putExtra("TO_MCU","SLO0\\n");
+                intent.putExtra("TO_MCU","RSUO\n");
                 break;
             case R.id.set_OPEN:
-                intent.putExtra("TO_MCU","SLO1\\n");
+                intent.putExtra("TO_MCU","RSUC\n");
+                break;
+            case R.id.effect_sound_off:
+                intent.putExtra("TO_MCU","SES1\n");
+                break;
+            case R.id.effect_sound_on:
+                intent.putExtra("TO_MCU","SES0\n");
+                break;
+            case R.id.alert_sound_off:
+                intent.putExtra("TO_MCU","SAS1\n");
+                break;
+            case R.id.alert_sound_on:
+                intent.putExtra("TO_MCU","SAS0\n");
                 break;
         }
         startService(intent);

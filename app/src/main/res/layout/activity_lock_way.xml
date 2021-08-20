@@ -54,7 +54,7 @@
             android:id="@+id/way_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="비밀번호"
+            android:text="키패드"
             android:textSize="24sp"
             android:layout_marginBottom="15dp"
             android:onClick="onCheckboxClicked"
@@ -71,10 +71,10 @@
             ></CheckBox>
 
         <CheckBox
-            android:id="@+id/way3"
+            android:id="@+id/way_app"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="way3"
+            android:text="어플 보안 해제"
             android:textSize="24sp"
             android:layout_marginBottom="15dp"
             android:onClick="onCheckboxClicked"
