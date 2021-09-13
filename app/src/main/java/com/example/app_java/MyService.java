@@ -5,13 +5,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,11 +32,26 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MyService extends Service {
 
     IBinder binder = new MyBinder();
     public byte[] $byteArray;
     public String msg_mcu;
+
+    private String[] Dialog_Arr;
+    private long mNow;
+    private Date mDate;
+    private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+    SharedPreferences shar_idx;
+    SharedPreferences.Editor shar_idx_editor;
+
+
 
     class MyBinder extends Binder{
         MyService getService(){
@@ -63,8 +81,8 @@ public class MyService extends Service {
             return Service.START_STICKY;//서비스가 종료되도 다시 자동 실행
         } else {
             String TO_MCU = intent.getStringExtra("TO_MCU");
-            byte[] set_face_user = intent.getByteArrayExtra("set_face_user");
-            byte[] set_face_danger = intent.getByteArrayExtra("set_face_danger");
+//            byte[] set_face_user = intent.getByteArrayExtra("set_face_user");
+//            byte[] set_face_danger = intent.getByteArrayExtra("set_face_danger");
             if (TO_MCU != null) {
                 Log.e("TO_MCU", TO_MCU);
                 try {
@@ -110,6 +128,8 @@ public class MyService extends Service {
 //                    //Log.e("arrive message : ", msg);}
                 if (topic.equals("picture")) {
                     $byteArray = message.getPayload();
+                    Bitmap BitMap_mqtt = BitmapFactory.decodeByteArray($byteArray, 0, $byteArray.length);
+
                 }
                 else if(topic.equals("TO_APP")){
 
@@ -157,6 +177,10 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        shar_idx = this.getSharedPreferences("file_idx", Context.MODE_PRIVATE);
+        shar_idx_editor = shar_idx.edit();
+
         $byteArray = null;
         token = null;
         msg_mcu = null;
@@ -246,7 +270,6 @@ public class MyService extends Service {
             intent.putExtra(app_lock_const.type, app_lock_const.APP_MCULOCK);
         }else {
             intent = new Intent(getApplicationContext(), Danger.class);
-            intent.putExtra("picture", data);
         }
 
         PendingIntent mPendingIntent = PendingIntent.getActivity(
@@ -287,6 +310,33 @@ public class MyService extends Service {
 
         manager.notify(1,notification);
 
+    }
+
+    public void saveBitmapToJpeg(Bitmap bitmap) {   // 선택한 이미지 내부 저장소에 저장
+        int idx = this.shar_idx.getInt("file_idx",0);
+        String[] file_name = new String[idx];
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
+        String getTime = mFormat.format(mDate);
+        File tempFile = new File(getCacheDir(), "Danger" + getTime);    // 파일 경로와 이름 넣기
+        file_name[idx] = "Danger" + getTime;
+        idx++;
+        shar_idx_editor.putInt("file_idx", idx);
+        shar_idx_editor.apply();
+        Toast.makeText(getApplicationContext(),String.valueOf(idx),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),file_name[idx - 1],Toast.LENGTH_LONG).show();
+        try {
+            tempFile.createNewFile();   // 자동으로 빈 파일을 생성하기
+            FileOutputStream out = new FileOutputStream(tempFile);  // 파일을 쓸 수 있는 스트림을 준비하기
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);   // compress 함수를 사용해 스트림에 비트맵을 저장하기
+            out.close();    // 스트림 닫아주기
+            Toast.makeText(getApplicationContext(), "파일 저장 성공", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "파일 저장 실패", Toast.LENGTH_SHORT).show();
+            idx --;
+            shar_idx_editor.putInt("file_idx", idx);
+            shar_idx_editor.apply();
+        }
     }
 
 }

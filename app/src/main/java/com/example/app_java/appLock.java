@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -35,7 +36,6 @@ public class appLock extends AppCompatActivity {
     private boolean changePwdUnlock = false;
     private boolean changepwddoorlock = false;
     private Animation anim;
-
 
     SharedPreferences sharePref;
     SharedPreferences sharePref_door;
@@ -415,6 +415,7 @@ public class appLock extends AppCompatActivity {
         }
         return false;
     }
+
 }
 
 

@@ -1,59 +1,21 @@
 package com.example.app_java;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.ProgressDialog;
-import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.os.Binder;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
+
 import android.view.View;
+
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Set;
 
 
 public class Control extends AppCompatActivity {
@@ -63,6 +25,8 @@ public class Control extends AppCompatActivity {
     private ImageButton set_user;
     public ImageButton btn_cam;
     public  ImageButton set_lock_way;
+    private Button connect_safe;
+
 
     MyService ms;
     boolean isService = false;
@@ -90,37 +54,20 @@ public class Control extends AppCompatActivity {
         bindService(service, conn, Context.BIND_AUTO_CREATE);
 
         setContentView(R.layout.activity_control);
-       // ImageButton btnopen = findViewById(R.id.btn_open);
-        btn_remote = (ImageButton)findViewById(R.id.lockButton);
+        btn_remote = (ImageButton) findViewById(R.id.lockButton);
         pw_menu = (ImageButton) findViewById(R.id.pw_menu);
         set_user = findViewById(R.id.userBotton);
-        btn_cam = (ImageButton)findViewById(R.id.Cam_Button);
-        set_lock_way = (ImageButton)findViewById(R.id.set_lock_way);
-
-        //drawerLayout = (DrawerLayout) findViewById(R.id.menu); 메뉴바 레이아웃
-        //drawerView = (View) findViewById(R.id.drawerView);
-        //drawerLayout.setDrawerListener(listener);
-
-        //ET_User = findViewById(R.id.ET_User); MQTT msg 수신 창
-        //mqtt_image = findViewById(R.id.mqtt_img); 위험인물 감지시 사진 수신
-       /* btnopen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()){
-                    case R.id.btn_open:
-                        drawerLayout.openDrawer(drawerView);
-                }
-            }
-        });*/
+        btn_cam = (ImageButton) findViewById(R.id.Cam_Button);
+        set_lock_way = (ImageButton) findViewById(R.id.set_lock_way);
+        connect_safe = (Button) findViewById(R.id.btn_connect_safe);
 
         set_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent set_user_intent = new Intent(Control.this, User_seting.class);
                 startActivity(set_user_intent);
-                }
-            });
-
+            }
+        });
 
 
         pw_menu.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +100,16 @@ public class Control extends AppCompatActivity {
             public void onClick(View view) {
                 Intent set_lock_way = new Intent(Control.this, lock_way.class);
                 startActivity(set_lock_way);
+            }
+        });
+
+
+        connect_safe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent request = new Intent(Control.this, MyService.class);
+                request.putExtra("TO_MCU","Connect_Request");
+                startService(request);
             }
         });
     }
