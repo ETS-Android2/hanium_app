@@ -1,5 +1,6 @@
 package com.example.app_java;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -70,13 +73,14 @@ public class MyService extends Service {
     private static String CHANEL_NAME = "Channel1";
 
     private boolean request_from_MCU = false;
-    private boolean change_notice_msg = false;
+
 
     public MyService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Toast.makeText(getApplicationContext(), "서비스 실행", Toast.LENGTH_SHORT).show();
         if (intent == null) {
             return Service.START_STICKY;//서비스가 종료되도 다시 자동 실행
         } else {
@@ -129,28 +133,26 @@ public class MyService extends Service {
                 if (topic.equals("picture")) {
                     $byteArray = message.getPayload();
                     Bitmap BitMap_mqtt = BitmapFactory.decodeByteArray($byteArray, 0, $byteArray.length);
+                    saveBitmapToJpeg(BitMap_mqtt);
 
                 }
-                else if(topic.equals("TO_APP")){
+                if(topic.equals("TO_APP")){
 
                     msg_mcu = new String(message.getPayload());
-                    if(msg_mcu.equals("RAU\n")){
+                    if(msg_mcu.contains("RAU\n")){
                         request_from_MCU = true;
                         Log.e("Result","RAU");
                     }
-                    else if(msg_mcu.equals("FIS\n")){
-                        change_notice_msg = true;
-                    }
                     else if(msg_mcu.equals("Danger\n"))
                     {
-                        showNoti($byteArray, request_from_MCU, change_notice_msg);
+                        showNoti($byteArray, request_from_MCU);
                     }
 
                     Log.e("to_app",msg_mcu);
-                    showNoti($byteArray, request_from_MCU, change_notice_msg);
+                    showNoti($byteArray, request_from_MCU);
 
                     request_from_MCU = false;
-                    change_notice_msg = false;
+
                 }
 //                    Intent danger_data = new Intent(MyService.this, Danger.class);
 //                    danger_data.putExtra("picture",$byteArray);
@@ -184,7 +186,7 @@ public class MyService extends Service {
         $byteArray = null;
         token = null;
         msg_mcu = null;
-        mqttAndroidClient = new MqttAndroidClient(this, "tcp://" + "54.185.18.26" + ":1883", MqttClient.generateClientId());
+        mqttAndroidClient = new MqttAndroidClient(this, "tcp://" + "54.201.98.240" + ":1883", MqttClient.generateClientId());
 
         // 2번째 파라메터 : 브로커의 ip 주소 , 3번째 파라메터 : client 의 id를 지정함 여기서는 paho 의 자동으로 id를 만들어주는것
         try {
@@ -261,7 +263,7 @@ public class MyService extends Service {
 
     }
 
-    public void showNoti(byte[] data, boolean flag_Request, boolean flag_access){builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    public void showNoti(byte[] data, boolean flag_Request){builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent;
@@ -289,18 +291,24 @@ public class MyService extends Service {
         }
         builder.setContentIntent(mPendingIntent);
 
+        if(this.msg_mcu.equals("FISg\n")) {
+            builder.setContentTitle("침입 상황");
+            builder.setContentText("누군가 금고 손잡이를 강하게 당기고 있습니다!");
+        }
+        else if(this.msg_mcu.equals("FISi\n")) {
+            builder.setContentTitle("침입 상황");
+            builder.setContentText("누군가 강제로 금고를 뜯으려고 합니다!");
+        }
+        else if(this.msg_mcu.equals("PAD\n")){
+            builder.setContentTitle("비밀번호 10회 실패");
+            builder.setContentText("키패드 잠금 보안 비밀번호를 10회 이상 실패하셨습니다!");
+        }
         if(flag_Request == true){
             builder.setContentTitle("잠금해제 요청");
             builder.setContentText("금고로부터 어플로 잠금해제 요청입니다!");
         }else {
-            if(flag_access == true){
-                builder.setContentTitle("강제 접근");
-                builder.setContentText("누군가 금고에 강제로 접근하려 합니다!.");
-            }
-            else{
-                builder.setContentTitle("위험 인물 감지!");
-                builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
-            }
+            builder.setContentTitle("위험 인물 감지!");
+            builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
         }
         builder.setAutoCancel(true);
 
@@ -310,11 +318,20 @@ public class MyService extends Service {
 
         manager.notify(1,notification);
 
+        Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        vib.vibrate(1000);
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE );
+        @SuppressLint("InvalidWakeLockTag")
+        PowerManager.WakeLock wakeLock = pm.newWakeLock( PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG" );
+        wakeLock.acquire(3000);
+
+
     }
 
     public void saveBitmapToJpeg(Bitmap bitmap) {   // 선택한 이미지 내부 저장소에 저장
         int idx = this.shar_idx.getInt("file_idx",0);
-        String[] file_name = new String[idx];
+        String[] file_name = new String[idx + 1];
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
         String getTime = mFormat.format(mDate);
@@ -325,14 +342,15 @@ public class MyService extends Service {
         shar_idx_editor.apply();
         Toast.makeText(getApplicationContext(),String.valueOf(idx),Toast.LENGTH_LONG).show();
         Toast.makeText(getApplicationContext(),file_name[idx - 1],Toast.LENGTH_LONG).show();
+
         try {
             tempFile.createNewFile();   // 자동으로 빈 파일을 생성하기
             FileOutputStream out = new FileOutputStream(tempFile);  // 파일을 쓸 수 있는 스트림을 준비하기
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);   // compress 함수를 사용해 스트림에 비트맵을 저장하기
             out.close();    // 스트림 닫아주기
-            Toast.makeText(getApplicationContext(), "파일 저장 성공", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "위험 인물 파일 저장 성공", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "파일 저장 실패", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "위험 인물 파일 저장 실패", Toast.LENGTH_SHORT).show();
             idx --;
             shar_idx_editor.putInt("file_idx", idx);
             shar_idx_editor.apply();

@@ -88,9 +88,10 @@ public class Danger extends Control {
                     for(int i = 0; i < idx; i++){
                         storage_file[i] = file_name[i];
                     }
-                    for(int i = 0; i < idx; i++){
-                        Log.e("file_name",file_name[i]);
-                    }
+
+//                    for(int i = 0; i < idx; i++){
+//                        Log.e("file_name",file_name[i]);
+//                    }
                     AlertDialog.Builder dlg = new AlertDialog.Builder(Danger.this);
                     dlg.setTitle("확인할 사진을 선택해주세요");
                 try {

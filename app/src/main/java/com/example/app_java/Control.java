@@ -104,14 +104,13 @@ public class Control extends AppCompatActivity {
         });
 
 
-        connect_safe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent request = new Intent(Control.this, MyService.class);
-                request.putExtra("TO_MCU","Connect_Request");
-                startService(request);
-            }
-        });
+//        connect_safe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent connect = new Intent(Control.this, paring_bt.class);
+//                startActivity(connect);
+//            }
+//        });
     }
 
 /*

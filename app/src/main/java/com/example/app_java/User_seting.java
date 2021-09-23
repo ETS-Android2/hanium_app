@@ -30,6 +30,9 @@ import androidx.core.content.FileProvider;
 
 
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +48,7 @@ public class User_seting extends AppCompatActivity {
     private String imageFilePath;
     private Uri photoUri;
 
+    private JSONObject jobj = new JSONObject();
 
     private Button btn_take_picture;
     private Button btn_take_gallery;
@@ -65,6 +69,7 @@ public class User_seting extends AppCompatActivity {
         btn_take_gallery = findViewById(R.id.gallery);
         btn_home = (ImageButton)findViewById(R.id.homeButton);
         view_setimage = (ImageView)findViewById(R.id.photo);
+
 
         init();
 
@@ -121,25 +126,42 @@ public class User_seting extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-
         BitmapDrawable drawable = (BitmapDrawable) view_setimage.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
 
         switch (view.getId()){
             case R.id.set_user_btn:
-                //set_user_intent.putExtra("set_face_user",bitmapToByteArray(bitmap));
+                //set_user_intent.putExtra("set_face_user",bitmapToByteArray(bitmap));/*
+                /*
                 try {
-                    MyService.mqttAndroidClient.publish("set_face_user",bitmapToByteArray(bitmap), 0 , false);
+                  this.jobj.put("Data",bitmapToByteArray(bitmap));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                data pasrsing (json)*/
+                try {
+                    MyService.mqttAndroidClient.publish("set_person_user", bitmapToByteArray(bitmap), 0 , false);
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
                 Log.e("사용자 설정","Clicked");
                 Toast.makeText(getApplicationContext(),"설정이 완료되었습니다",Toast.LENGTH_LONG).show();
                 break;
+
             case R.id.set_danger_btn:
+                /*
+                try {
+                    this.jobj.put("Target","Danger");
+                    this.jobj.put("Data",bitmapToByteArray(bitmap));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                data pasrsing (json)*/
+
                 //set_danger_intent.putExtra("set_face_danger",bitmapToByteArray(bitmap));
                 try {
-                    MyService.mqttAndroidClient.publish("set_face_danger",bitmapToByteArray(bitmap), 0 , false);
+//                    MyService.mqttAndroidClient.publish("set_person",jobj.toString().getBytes(), 0 , false);
+                    MyService.mqttAndroidClient.publish("set_person_danger",bitmapToByteArray(bitmap), 0 , false);
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
@@ -311,4 +333,5 @@ public class User_seting extends AppCompatActivity {
             set_danger_btn.setVisibility(View.INVISIBLE);
             view_setimage.setImageBitmap(null);
         }
+
     }

@@ -106,7 +106,7 @@ public class appLock extends AppCompatActivity {
                 int status = event.getAction();
                 et_pwd.setText(fake_num);
 
-                if(status == MotionEvent.ACTION_DOWN){
+                if(status == MotionEvent.ACTION_MOVE){
                     et_pwd.setText(pwd);
                     return true;
                 }
@@ -251,7 +251,7 @@ public class appLock extends AppCompatActivity {
 
     private  void inputType(int type) {
 
-        if (isPassLockSet() && (type == app_lock_const.ENABLE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
+        if (!isPassLockSet() && (type == app_lock_const.ENABLE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
             if (checkPassLock(pwd)) {
                 Intent intent = new Intent(appLock.this, Control.class);
                 startActivity(intent);
