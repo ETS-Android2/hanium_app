@@ -50,7 +50,7 @@ public class MyService extends Service {
     private long mNow;
     private Date mDate;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
+    private Intent request_intent;
     SharedPreferences shar_idx;
     SharedPreferences.Editor shar_idx_editor;
 
@@ -139,7 +139,7 @@ public class MyService extends Service {
                 if(topic.equals("TO_APP")){
 
                     msg_mcu = new String(message.getPayload());
-                    if(msg_mcu.contains("RAU\n")){
+                    if(msg_mcu.contains("RAU\n") || msg_mcu.contains("RCR\n")){
                         request_from_MCU = true;
                         Log.e("Result","RAU");
                     }
@@ -266,18 +266,39 @@ public class MyService extends Service {
     public void showNoti(byte[] data, boolean flag_Request){builder = null; manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent;
-        if(flag_Request == true){
-            intent = new Intent(getApplicationContext(), appLock.class);
-            intent.putExtra(app_lock_const.type, app_lock_const.APP_MCULOCK);
-        }else {
-            intent = new Intent(getApplicationContext(), Danger.class);
+
+        if(this.msg_mcu.equals("RAU\n")) {
+            this.request_intent = new Intent(getApplicationContext(), appLock.class);
+            this.request_intent.putExtra(app_lock_const.type, app_lock_const.APP_MCULOCK);
+        }
+        else if(this.msg_mcu.equals("RCR\n")) {
+            //보안 완화 요청
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("FISg\n")) {
+            //침입 상황
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("FISi\n")) {
+            //금고 개방
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("PAD\n")){
+            //비밀번호 10회 실패
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("FFB\n")){
+            //금고 도난 상황
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("Danger\n")) {
+            this.request_intent = new Intent(getApplicationContext(), Danger.class);
         }
 
         PendingIntent mPendingIntent = PendingIntent.getActivity(
                 MyService.this,
                 0, // 보통 default값 0을 삽입
-                intent,
+                this.request_intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
@@ -291,25 +312,37 @@ public class MyService extends Service {
         }
         builder.setContentIntent(mPendingIntent);
 
-        if(this.msg_mcu.equals("FISg\n")) {
-            builder.setContentTitle("침입 상황");
-            builder.setContentText("누군가 금고 손잡이를 강하게 당기고 있습니다!");
+
+
+        if(this.msg_mcu.equals("RAU\n")) {
+                builder.setContentTitle("잠금해제 요청");
+                builder.setContentText("금고로부터 어플로 잠금해제 요청입니다!");
+        }
+        else if(this.msg_mcu.equals("RCR\n")) {
+                builder.setContentTitle("보안 완화");
+                builder.setContentText("금고로부터 보안 완화 요청입니다!");
+
+        }else if(this.msg_mcu.equals("FISg\n")) {
+                builder.setContentTitle("침입 상황");
+                builder.setContentText("누군가 금고 손잡이를 강하게 당기고 있습니다!");
         }
         else if(this.msg_mcu.equals("FISi\n")) {
-            builder.setContentTitle("침입 상황");
-            builder.setContentText("누군가 강제로 금고를 뜯으려고 합니다!");
+                builder.setContentTitle("금고 개방");
+                builder.setContentText("누군가 강제로 금고를 개방하였습니다!");
         }
         else if(this.msg_mcu.equals("PAD\n")){
-            builder.setContentTitle("비밀번호 10회 실패");
-            builder.setContentText("키패드 잠금 보안 비밀번호를 10회 이상 실패하셨습니다!");
+                builder.setContentTitle("비밀번호 10회 실패");
+                builder.setContentText("키패드 잠금 보안 비밀번호를 10회 이상 실패하셨습니다!");
         }
-        if(flag_Request == true){
-            builder.setContentTitle("잠금해제 요청");
-            builder.setContentText("금고로부터 어플로 잠금해제 요청입니다!");
-        }else {
-            builder.setContentTitle("위험 인물 감지!");
-            builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
+        else if(this.msg_mcu.equals("FFB\n")){
+                builder.setContentTitle("금고 도난 상황");
+                builder.setContentText("현재 금고가 도난 당하고 있습니다!");
         }
+        else if(this.msg_mcu.equals("Danger\n")) {
+                builder.setContentTitle("위험 인물 감지!");
+                builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
+        }
+
         builder.setAutoCancel(true);
 
         builder.setSmallIcon(R.drawable.noti);

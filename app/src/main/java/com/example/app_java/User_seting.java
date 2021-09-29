@@ -29,6 +29,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 
+import com.bumptech.glide.Glide;
+
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -248,8 +250,9 @@ public class User_seting extends AppCompatActivity {
 
                         in.close();
 
-                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(img);
-                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(rotate(img,exifDegree));
+//                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(img);
+                        ((ImageView) findViewById(R.id.photo)).setImageBitmap(rotate(img,exifDegree + 90));
+
                         set_user_btn.setEnabled(true);
                         set_user_btn.setVisibility(View.VISIBLE);
                         set_danger_btn.setEnabled(true);
@@ -270,17 +273,17 @@ public class User_seting extends AppCompatActivity {
 
 
 
-        private int exifOrientationToDegrees ( int exifOrientation){
+        private int exifOrientationToDegrees ( int exifOrientation) {
             if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
                 return 90;
             } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
                 return 180;
             } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
                 return 270;
+            } else {
+                return 0;
             }
-            return 0;
         }
-
         private Bitmap rotate (Bitmap bitmap,float degree){
             Matrix matrix = new Matrix();
             matrix.postRotate(degree);
