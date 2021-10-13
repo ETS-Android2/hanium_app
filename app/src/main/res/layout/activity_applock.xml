@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#a6d6e8"
     android:orientation="vertical">
 
     <TextView
@@ -10,35 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:gravity="center"
-        android:layout_marginTop="16dp"
+        android:background="#a6d6e8"
+        android:layout_marginTop="35dp"
         android:text="비밀번호 입력"
+        android:layout_marginBottom="70dp"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
+        android:fontFamily="@font/regular"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:background="#a6d6e8"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/text_pwd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:background="#a6d6e8"
             android:gravity="center"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            ></EditText>
+            android:textColor="@color/black"></EditText>
+        q
 
         <ImageButton
             android:id="@+id/visible_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@color/white"
-            android:src="@drawable/visible_btn"
-            ></ImageButton>
+            android:layout_marginBottom="95dp"
+            android:background="#8dcde5"></ImageButton>
 
     </LinearLayout>
 
@@ -46,35 +48,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#e7e7e7"
         android:layout_gravity="bottom"
-        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/set_pwd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:background="@color/white"
-            android:text="OK"
-            android:textColor="@color/black"></Button>
+            android:layout_height="60dp"
+            android:background="@drawable/btn_ok"
+            android:text="확인"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/light"></Button>
 
         <TableLayout
             android:id="@+id/tl_keys"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
+            android:background="#e7e7e7"
             android:shrinkColumns="*"
             android:stretchColumns="*">
 
-            <TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
                 <Button
                     android:id="@+id/btn1"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="1"
@@ -84,9 +92,9 @@
                 <Button
                     android:id="@+id/btn2"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="2"
@@ -96,9 +104,9 @@
                 <Button
                     android:id="@+id/btn3"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="3"
@@ -111,9 +119,9 @@
                 <Button
                     android:id="@+id/btn4"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="4"
@@ -123,9 +131,9 @@
                 <Button
                     android:id="@+id/btn5"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="5"
@@ -135,9 +143,9 @@
                 <Button
                     android:id="@+id/btn6"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="6"
@@ -150,9 +158,9 @@
                 <Button
                     android:id="@+id/btn7"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="7"
@@ -162,9 +170,9 @@
                 <Button
                     android:id="@+id/btn8"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="8"
@@ -174,9 +182,9 @@
                 <Button
                     android:id="@+id/btn9"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="9"
@@ -189,9 +197,9 @@
                 <Button
                     android:id="@+id/btnClear"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -202,9 +210,9 @@
                 <Button
                     android:id="@+id/btn0"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:gravity="center"
                     android:onClick="onSingleClick"
                     android:text="0"
@@ -214,9 +222,9 @@
                 <Button
                     android:id="@+id/btnErase"
                     android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_height="70dp"
                     android:layout_margin="5dp"
-                    android:background="@color/white"
+                    android:background="@drawable/btn_input_pw"
                     android:onClick="onSingleClick"
                     android:text="DEL"
                     android:textColor="@color/black" />

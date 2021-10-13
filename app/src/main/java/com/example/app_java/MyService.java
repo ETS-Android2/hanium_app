@@ -11,11 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -24,6 +21,9 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -39,6 +39,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MyService extends Service {
 
@@ -46,15 +48,21 @@ public class MyService extends Service {
     public byte[] $byteArray;
     public String msg_mcu;
 
+    private String who;
     private String[] Dialog_Arr;
     private long mNow;
     private Date mDate;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Intent request_intent;
+    private String Beacon_check;
     SharedPreferences shar_idx;
     SharedPreferences.Editor shar_idx_editor;
 
+    SharedPreferences share_beacon;
+    SharedPreferences.Editor share_beacon_editor;
 
+    SharedPreferences share_beacon_check;
+    SharedPreferences.Editor share_beacon_check_editor;
 
     class MyBinder extends Binder{
         MyService getService(){
@@ -78,8 +86,11 @@ public class MyService extends Service {
     public MyService() {
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        who = "" ;
         Toast.makeText(getApplicationContext(), "서비스 실행", Toast.LENGTH_SHORT).show();
         if (intent == null) {
             return Service.START_STICKY;//서비스가 종료되도 다시 자동 실행
@@ -139,13 +150,30 @@ public class MyService extends Service {
                 if(topic.equals("TO_APP")){
 
                     msg_mcu = new String(message.getPayload());
-                    if(msg_mcu.contains("RAU\n") || msg_mcu.contains("RCR\n")){
+                    if(msg_mcu.contains("RAU\n")){
                         request_from_MCU = true;
                         Log.e("Result","RAU");
                     }
-                    else if(msg_mcu.equals("Danger\n"))
+                    else if(msg_mcu.equals("Danger\n") || msg_mcu.equals("Unknown\n"))
                     {
                         showNoti($byteArray, request_from_MCU);
+                    }
+
+                    else if(msg_mcu.contains("RCR")){
+                        Log.e("Payload","RCR\n");
+                        if(share_beacon_check.getString("Check_Beacon","").equals("IN")) {
+                            try {
+                                mqttAndroidClient.publish("TO_MCU", "SAR1\n".getBytes(), 0, false);
+                                Log.e("RCR ->","SAR1\n");
+                            }catch (Exception e){}
+                        }else if(share_beacon_check.getString("Check_Beacon","").equals("EXIT")) {
+                            try {
+                                mqttAndroidClient.publish("TO_MCU", "SAR0\n".getBytes(), 0, false);
+                                Log.e("RCR ->","SAR0\n");
+                            }catch (Exception e){}
+                        }
+
+
                     }
 
                     Log.e("to_app",msg_mcu);
@@ -165,7 +193,7 @@ public class MyService extends Service {
             public void deliveryComplete(IMqttDeliveryToken token) {
             }
         });
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -182,6 +210,12 @@ public class MyService extends Service {
 
         shar_idx = this.getSharedPreferences("file_idx", Context.MODE_PRIVATE);
         shar_idx_editor = shar_idx.edit();
+
+        share_beacon = this.getSharedPreferences("Beacon", Context.MODE_PRIVATE);
+        share_beacon_editor = share_beacon.edit();
+
+        share_beacon_check = this.getSharedPreferences("Check_Beacon", Context.MODE_PRIVATE);
+        share_beacon_check_editor = share_beacon_check.edit();
 
         $byteArray = null;
         token = null;
@@ -226,6 +260,17 @@ public class MyService extends Service {
         }
 */
 
+        Timer timer = new Timer();
+
+        TimerTask reset_beacon_check = new TimerTask() {
+            @Override
+            public void run() {
+                share_beacon_check_editor.putString("Check_Beacon","EXIT");
+                share_beacon_check_editor.apply();
+                Log.e("Timer","On");
+            }
+        };
+        timer.schedule(reset_beacon_check,0, 60000);
     }
 
 
@@ -271,10 +316,6 @@ public class MyService extends Service {
             this.request_intent = new Intent(getApplicationContext(), appLock.class);
             this.request_intent.putExtra(app_lock_const.type, app_lock_const.APP_MCULOCK);
         }
-        else if(this.msg_mcu.equals("RCR\n")) {
-            //보안 완화 요청
-            this.request_intent = new Intent(getApplicationContext(), Control.class);
-        }
         else if(this.msg_mcu.equals("FISg\n")) {
             //침입 상황
             this.request_intent = new Intent(getApplicationContext(), Control.class);
@@ -292,7 +333,10 @@ public class MyService extends Service {
             this.request_intent = new Intent(getApplicationContext(), Control.class);
         }
         else if(this.msg_mcu.equals("Danger\n")) {
-            this.request_intent = new Intent(getApplicationContext(), Danger.class);
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
+        }
+        else if(this.msg_mcu.equals("Unknown\n")) {
+            this.request_intent = new Intent(getApplicationContext(), Control.class);
         }
 
         PendingIntent mPendingIntent = PendingIntent.getActivity(
@@ -318,11 +362,7 @@ public class MyService extends Service {
                 builder.setContentTitle("잠금해제 요청");
                 builder.setContentText("금고로부터 어플로 잠금해제 요청입니다!");
         }
-        else if(this.msg_mcu.equals("RCR\n")) {
-                builder.setContentTitle("보안 완화");
-                builder.setContentText("금고로부터 보안 완화 요청입니다!");
-
-        }else if(this.msg_mcu.equals("FISg\n")) {
+        else if(this.msg_mcu.equals("FISg\n")) {
                 builder.setContentTitle("침입 상황");
                 builder.setContentText("누군가 금고 손잡이를 강하게 당기고 있습니다!");
         }
@@ -341,6 +381,10 @@ public class MyService extends Service {
         else if(this.msg_mcu.equals("Danger\n")) {
                 builder.setContentTitle("위험 인물 감지!");
                 builder.setContentText("금고 주변에 위험 인물이 감지되었습니다.");
+        }
+        else if(this.msg_mcu.equals("Unknown\n")) {
+            builder.setContentTitle("미등록 인물 감지!");
+            builder.setContentText("금고 주변에 미등록 인물이 감지되었습니다.");
         }
 
         builder.setAutoCancel(true);
@@ -368,8 +412,18 @@ public class MyService extends Service {
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
         String getTime = mFormat.format(mDate);
-        File tempFile = new File(getCacheDir(), "Danger" + getTime);    // 파일 경로와 이름 넣기
-        file_name[idx] = "Danger" + getTime;
+
+        if(msg_mcu.equals("Danger\n")){
+            who = "Danger";    // 파일 경로와 이름 넣기
+
+        }
+        else if(msg_mcu.equals("Unknown\n")){
+            who = "Unknown";    // 파일 경로와 이름 넣기
+
+        }
+        File tempFile = new File(getCacheDir(), who + getTime);
+        file_name[idx] = who + getTime;
+
         idx++;
         shar_idx_editor.putInt("file_idx", idx);
         shar_idx_editor.apply();

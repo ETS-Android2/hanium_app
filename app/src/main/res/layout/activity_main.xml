@@ -3,25 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:layout_gravity="center"
+    android:background="#a6d6e8"
     android:orientation="vertical"
     >
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="50dp"
+        android:background="#a6d6e8"
         android:gravity="center"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="16dp"
-        android:text="Smart Safe"
-        android:textSize = "28sp"
-        android:background="@color/white"
-        android:textColor="@color/black"
-        ></TextView>
-
+        android:text="스 말 뜨    금 고"
+        android:textColor="@color/white"
+        android:fontFamily="@font/regular"
+        android:textSize="32sp"></TextView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:src="@drawable/main_lock"
+        android:gravity="center"
+        ></ImageView>
     <VideoView
-        android:id="@+id/video_safe"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/loading"
+        android:layout_marginTop="120dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         ></VideoView>
 </LinearLayout>

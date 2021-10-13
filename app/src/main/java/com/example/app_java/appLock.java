@@ -253,6 +253,8 @@ public class appLock extends AppCompatActivity {
 
         if (isPassLockSet() && (type == app_lock_const.ENABLE_PASSLOCK)) {//폰으로는 !isPassLockSet()으로
             if (checkPassLock(pwd)) {
+                Intent Service = new Intent(appLock.this, MyService.class);
+                startService(Service);
                 Intent intent = new Intent(appLock.this, Control.class);
                 startActivity(intent);
             } else {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#a6d6e8"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_marginTop="150dp"
+        android:layout_gravity="center"
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="195dp"
+        android:src="@drawable/noti_icon" />
+    <TextView
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/regular"
+        android:layout_gravity="center"
+        android:text="알려줘요" />
+
+    <TextView
+        android:layout_gravity="center"
+        android:layout_marginTop="23sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/regular"
+        android:textColor="#747474"
+        android:text = "      사용자가 어디에 있어도 \n 스말뜨 금고가 모두 알려드려요 "
+        android:textSize="15sp"
+        />
+</LinearLayout>

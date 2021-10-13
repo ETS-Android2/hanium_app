@@ -1,74 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4CAC3"
+    android:background="#d2e5ec"
+    android:orientation="vertical"
     tools:context=".Set_Pwd">
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/set_pic"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp">
+        />
 
-        <ImageButton
-            android:id="@+id/homeButton"
-            android:layout_width="67dp"
-            android:layout_height="65dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/home"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="5dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="70dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="비밀번호 변경"
+                android:textSize="16sp"
+                android:fontFamily="@font/bold"
+                ></TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <LinearLayout
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/btn_shape_mint"
+                    >
+                    <ImageButton
+                        android:id="@+id/smartphone"
+                        android:layout_width="110dp"
+                        android:layout_height="120dp"
+                        android:paddingTop="15dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:paddingLeft="10dp"
+                        android:background="#fff"
+                        app:srcCompat="@drawable/smartphone_icon" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/bold"
+                        android:gravity="center"
+                        android:text="어플"
+                        android:textColor="#001c60"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="160dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/btn_shape_mint"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/set_safe"
+                        android:layout_width="110dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:background="#ffff"
+                        android:paddingTop="20dp"
+                        app:srcCompat="@drawable/keypad" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/bold"
+                        android:text="금고"
+                        android:textColor="#001c60"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="357dp"
-        android:layout_height="549dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        tools:ignore="MissingConstraints">
-
-        <ImageButton
-            android:id="@+id/smartphone"
-            android:layout_width="150dp"
-            android:layout_height="120dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/smartphone" />
-
+        >
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="스마트폰 잠금 설정"
-            android:textSize="20sp"
-            android:layout_marginBottom="44dp"/>
-
-        <ImageButton
-            android:id="@+id/doorlock"
-            android:layout_width="150dp"
-            android:layout_height="120dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/doorlock"/>
-        <TextView
-            android:id="@+id/textView2"
+            android:text="인식 대상 변경"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/bold"
+            ></TextView>
+        <LinearLayout
+            android:id="@+id/linearLayout_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="LCD 잠금 설정"
-            android:textSize="20sp"
-            />
+            android:layout_marginLeft="15dp"
+            android:orientation="horizontal"
+            >
+            <LinearLayout
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_shape_mint"
+                android:orientation="vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/use_camera"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="#fff"
+                    android:paddingTop="30dp"
+                    android:paddingBottom="20dp"
+                    android:scaleType="fitCenter"
+
+                    app:srcCompat="@drawable/cam" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/camera_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#001c60"
+                    android:text="카메라로 인물 변경"
+                    android:fontFamily="@font/bold"
+                    android:textSize="12sp" />
+
+                <ImageButton
+                    android:id="@+id/set_user"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_shape_mint"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="5dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/set_user" />
+
+                <TextView
+
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/user_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="사용자"
+                    android:fontFamily="@font/bold"
+                    android:textColor="#001c60"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_shape_mint"
+                android:orientation="vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/use_gallery"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="#fff"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="5dp"
+                    android:scaleType="fitCenter"
+
+                    app:srcCompat="@drawable/gallery2" />
+
+                <TextView
+                    android:id="@+id/gallery_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="갤러리로 인물 변경"
+                    android:fontFamily="@font/bold"
+                    android:textColor="#001c60"
+                    android:textSize="12sp" />
+
+                <ImageButton
+
+                    android:id="@+id/set_danger"
+
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_shape_mint"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="5dp"
+                    app:srcCompat="@drawable/danger" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/danger_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="위험인물"
+                    android:fontFamily="@font/bold"
+                    android:textColor="#001c60"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

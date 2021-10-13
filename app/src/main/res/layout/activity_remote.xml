@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#d2e5ec"
+    android:orientation="vertical"
+    tools:context=".remote">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bold"
+        android:gravity="center"
+        android:text="원격 제어"
+        android:textColor="@color/black"
+        android:textSize="16sp"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"
+            android:orientation="vertical"
+            >
+            <CheckBox
+                android:id="@+id/effect_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="#d2e5ec"
+                android:button="@drawable/check_box_effect"
+                android:scaleType="fitCenter"></CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="효과음"
+                android:textColor="@color/black"
+                android:fontFamily="@font/regular"
+                android:layout_gravity="center"
+                android:textSize="12sp"
+                ></TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:orientation="vertical"
+            >
+            <CheckBox
+                android:id="@+id/alert_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="#d2e5ec"
+                android:button="@drawable/check_box_alert"></CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="경고음"
+                android:textColor="@color/black"
+                android:fontFamily="@font/regular"
+                android:layout_gravity="center"
+                android:textSize="12sp"
+                ></TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:orientation="vertical"
+            >
+            <CheckBox
+                android:id="@+id/set_lock"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="#d2e5ec"
+                android:button="@drawable/check_box_lock"
+                android:scaleType="fitCenter"></CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="2차 보안"
+                android:textColor="@color/black"
+                android:fontFamily="@font/regular"
+                android:layout_gravity="center"
+                android:textSize="12sp"
+                ></TextView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="보안 순서 설정"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/bold"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    ></TextView>
+                <CheckBox
+                    android:id="@+id/way_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:button="@drawable/checkbox_circle"
+                    android:fontFamily="@font/regular"
+                    android:text="키패드"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"></CheckBox>
+
+                <CheckBox
+                    android:id="@+id/face_recog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:button="@drawable/checkbox_circle"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/regular"
+                    android:text="사용자 얼굴 인식"
+                    android:textSize="16sp"></CheckBox>
+
+                <CheckBox
+                    android:id="@+id/way_app"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:button="@drawable/checkbox_circle"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/regular"
+                    android:text="어플 보안 해제"
+                    android:textSize="16sp"></CheckBox>
+
+                <Button
+                    android:id="@+id/final_set"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="설정 완료"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_ok"
+                    android:layout_gravity="center"
+                    ></Button>
+
+
+
+            </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

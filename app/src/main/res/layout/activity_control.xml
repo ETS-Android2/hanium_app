@@ -1,121 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/l"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/closed"
+    android:background="#d2e5ec"
+    android:orientation="vertical"
     tools:context=".Control">
 
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="414dp"
-        android:layout_height="wrap_content"
-        android:background="#65A4CAC3"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp">
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="530dp"
+        android:background="#d2e5ec"
+        />
 
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/homeButton"-->
-<!--            android:layout_width="67dp"-->
-<!--            android:layout_height="65dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            app:srcCompat="@drawable/home"-->
-<!--            tools:layout_editor_absoluteX="1dp"-->
-<!--            tools:layout_editor_absoluteY="5dp"-->
-<!--            />-->
-
-        <ImageButton
-            android:id="@+id/Cam_Button"
-            android:layout_width="67dp"
-            android:layout_height="65dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/cam"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="5dp"
-            tools:ignore="MissingConstraints" />
-
-        <ImageButton
-            android:id="@+id/set_lock_way"
-            android:layout_width="67dp"
-            android:layout_height="65dp"
-            android:scaleType="center"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="5dp"></ImageButton>
-
-        <Button
-            android:id="@+id/btn_connect_safe"
-            android:layout_width="67dp"
-            android:layout_height="65dp"
-            android:layout_marginLeft="130dp"
-            android:text="연동"
-            ></Button>
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:background="#EFEFEF"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="50dp"
+        android:background="#d2e5ec"
+        android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/pw_menu"
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/menu"
-            android:scaleType="fitCenter"
-            android:visibility="visible"
-            app:srcCompat="@drawable/menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:id="@+id/Set_app"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/user"
+            android:scaleType="center"
+            app:srcCompat="@drawable/user" />
 
         <ImageButton
             android:id="@+id/lockButton"
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/lock"
-            android:scaleType="fitCenter"
-            android:visibility="visible"
-            app:srcCompat="@drawable/lock"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-
-            />
+            android:scaleType="center"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/lock" />
 
         <ImageButton
-            android:id="@+id/userBotton"
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/user"
+            android:id="@+id/remoteButton"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:scaleType="center"
+            android:layout_gravity="center"
+            android:src="@drawable/remote_control" />
+
+        <ImageButton
+            android:id="@+id/btn_beacon"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:background="#d2e5ec"
+            android:onClick="OnButtonClicked"
             android:scaleType="fitCenter"
-            android:visibility="visible"
-            app:srcCompat="@drawable/user"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-
-            />
-
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/beacon"></ImageButton>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
